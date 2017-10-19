@@ -69,19 +69,19 @@
     colNum = [0, -1, 1, 0];
 
     function findPath(matrix, ghostPos, pacmanPos, pathToPacman) {
-        console.log(matrix);
-        console.log(ghostPos);
-        console.log(pacmanPos);
+//        console.log(matrix);
+//        console.log(ghostPos);
+//        console.log(pacmanPos);
         var visited=[[0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0]];
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0]];
         // check source and destination cell
         // of the matrix have value 1
         if (matrix[ghostPos.x][ghostPos.y] === 0 || matrix[pacmanPos.x][pacmanPos.y] === 0)
@@ -113,23 +113,23 @@
             // If we have reached the destination cell,
             // we are done
             if (pt.x === pacmanPos.x && pt.y === pacmanPos.y) {
-                for(var k = 0; k < temp.length; k++)
-                    str3 += "(" + temp[k].pt.x.toString() + ", " + temp[k].pt.y.toString() + "), " + temp[k].dist + "; ";
-
-                str3 += "<br><br><br><br>";
+//                for(var k = 0; k < temp.length; k++)
+//                    str3 += "(" + temp[k].pt.x.toString() + ", " + temp[k].pt.y.toString() + "), " + temp[k].dist + "; ";
+//
+//                str3 += "<br><br><br><br>";
 
                 var earlierPoint = temp[temp.length - 1];
                 for(var l = temp.length - 2; l >= 0; l--) {
                     if((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
                         pathToPacman.push(temp[l].pt);
                         earlierPoint = temp[l];
-                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
+//                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
                     }
                 }
+//                b.innerHTML += str3;
                 pathToPacman = pathToPacman.reverse();
                 pathToPacman.push(pacmanPos);
-                console.log(pathToPacman);
-                b.innerHTML += str3;
+//                console.log(pathToPacman);
 
                 return curr.dist;
             }
@@ -159,33 +159,28 @@
         return -1;
     }
 
-    function moveGhost(matrix, matrixOriginal, currentpos, pacmanpos) {
+    function moveGhost(matrix, matrixCopy, currentPos, pacmanPos) {
 
         var pathToPacman = [];
-        findPath(matrixOriginal, currentpos, pacmanpos, pathToPacman);
+        findPath(matrix, currentPos, pacmanPos, pathToPacman);
 
-        matrix[pathToPacman[1].x][pathToPacman[1].y] = 0;
-        matrix[pathToPacman[2].x][pathToPacman[2].y] = 5;
-        currentpos.x = pathToPacman[2].x;
-        currentpos.y = pathToPacman[2].y;
-        return currentpos;
+        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = 1;
+        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = "g";
+        if(pathToPacman.length === 1)
+            return "gameOver";
+        currentPos.x = pathToPacman[1].x;
+        currentPos.y = pathToPacman[1].y;
+        return currentPos;
     }
 
-    function movePacman(matrixOriginal, pacmanpos, ghostPos) {
-        var matrix=[[0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0]], i, j;
-//    var str = "";
-//    var b = document.getElementsByTagName("body")[0];
+    function movePacman(matrix, matrixCopy, pacmanPos, ghostPos) {
+        //        var str = "";
         number = setInterval(function() {
-            ghostPos = moveGhost(matrix, matrixOriginal, ghostPos, pacmanpos);
+            ghostPos = moveGhost(matrix, matrixCopy, ghostPos, pacmanPos);
+            if(ghostPos === "gameOver") {
+                clearInterval(number);
+                b.innerHTML = "<h1>Game Over</h1>";
+            }
             var map = {}; // You could also use an array
             onkeydown = onkeyup = function(event) {
                 event = event || event; // to deal with IE
@@ -193,93 +188,109 @@
                 /* insert conditional here */
                 if (map[37] == true || map[38] == true || map[39] == true || map[40] == true) {
                     if (map[38] == true) {
-                        if (pacmanpos.x - 1 >= 0 && pacmanpos.x - 1 < MAT_MAX && pacmanpos.y >= 0 && pacmanpos.y < MAT_MAX) {
-                            matrix[pacmanpos.x][pacmanpos.y] = 0;
-                            matrix[--pacmanpos.x][pacmanpos.y] = 1;
+                        if (pacmanPos.x - 1 >= 0 && pacmanPos.x - 1 < MAT_MAX && pacmanPos.y >= 0 && pacmanPos.y < MAT_MAX && matrix[pacmanPos.x - 1][pacmanPos.y] === 1) {
+                            matrixCopy[pacmanPos.x][pacmanPos.y] = 1;
+                            matrixCopy[--pacmanPos.x][pacmanPos.y] = "p";
                         }
                     }
                     if (map[37] == true) {
-                        if (pacmanpos.x >= 0 && pacmanpos.x < MAT_MAX && pacmanpos.y - 1 >= 0 && pacmanpos.y - 1 < MAT_MAX) {
-                            matrix[pacmanpos.x][pacmanpos.y] = 0;
-                            matrix[pacmanpos.x][--pacmanpos.y] = 1;
+                        if (pacmanPos.x >= 0 && pacmanPos.x < MAT_MAX && pacmanPos.y - 1 >= 0 && pacmanPos.y - 1 < MAT_MAX && matrix[pacmanPos.x][pacmanPos.y - 1] === 1) {
+                            matrixCopy[pacmanPos.x][pacmanPos.y] = 1;
+                            matrixCopy[pacmanPos.x][--pacmanPos.y] = "p";
                         }
                     }
                     if (map[40] == true) {
-                        if (pacmanpos.x + 1 >= 0 && pacmanpos.x + 1 < MAT_MAX && pacmanpos.y >= 0 && pacmanpos.y < MAT_MAX) {
-                            matrix[pacmanpos.x][pacmanpos.y] = 0;
-                            matrix[++pacmanpos.x][pacmanpos.y] = 1;
+                        if (pacmanPos.x + 1 >= 0 && pacmanPos.x + 1 < MAT_MAX && pacmanPos.y >= 0 && pacmanPos.y < MAT_MAX && matrix[pacmanPos.x + 1][pacmanPos.y] === 1) {
+                            matrixCopy[pacmanPos.x][pacmanPos.y] = 1;
+                            matrixCopy[++pacmanPos.x][pacmanPos.y] = "p";
                         }
                     }
                     if (map[39] == true) {
-                        if (pacmanpos.x >= 0 && pacmanpos.x < MAT_MAX && pacmanpos.y + 1 >= 0 && pacmanpos.y + 1 < MAT_MAX) {
-                            matrix[pacmanpos.x][pacmanpos.y] = 0;
-                            matrix[pacmanpos.x][++pacmanpos.y] = 1;
+                        if (pacmanPos.x >= 0 && pacmanPos.x < MAT_MAX && pacmanPos.y + 1 >= 0 && pacmanPos.y + 1 < MAT_MAX && matrix[pacmanPos.x][pacmanPos.y + 1] === 1) {
+                            matrixCopy[pacmanPos.x][pacmanPos.y] = 1;
+                            matrixCopy[pacmanPos.x][++pacmanPos.y] = "p";
                         }
                     }
                 }
             };
             str = "";
+            b.innerHTML = "";
             for(var i = 0; i < MAT_MAX; i++)
             {
                 for(var j = 0; j < MAT_MAX; j++) {
-                    str = str + matrix[i][j].toString() + " ";
+                    str = str + matrixCopy[i][j].toString() + " ";
                 }
                 // str = str + "\n";
                 str = str + "<br>";
             }
             b.innerHTML += str;
+            if(ghostPos.x === pacmanPos.x && ghostPos.y === pacmanPos.y) {
+                clearInterval(number);
+                b.innerHTML = "<h1>Game Over</h1>";
+            }
             // console.log(str);
             // console.log("\n\n");
-        }, 2000);
+        }, 1000);
     }
 
     function main() {
         var matrix=[[1,1,1,1,1,0,0,1,0,0],
-                    [0,1,0,0,1,1,1,1,0,0],
-                    [0,1,0,0,0,0,0,0,0,0],
-                    [0,1,0,0,0,0,0,0,0,0],
-                    [0,1,0,0,1,1,1,0,0,0],
-                    [0,1,1,1,1,1,1,0,0,0],
-                    [0,0,1,1,1,0,0,0,0,0],
-                    [0,0,0,0,1,1,1,1,0,0],
-                    [0,0,0,0,0,0,1,1,0,0],
-                    [0,0,0,0,0,0,1,1,1,1]], i, j;
+            [0,1,0,0,1,1,1,1,0,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,0,1,1,1,0,0,0],
+            [0,1,1,1,1,1,1,0,0,0],
+            [0,0,1,1,1,0,0,0,0,0],
+            [0,0,0,0,1,1,1,1,0,0],
+            [0,0,0,0,0,0,1,1,0,0],
+            [0,0,0,0,0,0,1,1,1,1]], i, j;
+
+        var matrixCopy=[[1,1,1,1,1,0,0,1,0,0],
+            [0,1,0,0,1,1,1,1,0,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,0,1,1,1,0,0,0],
+            [0,1,1,1,1,1,1,0,0,0],
+            [0,0,1,1,1,0,0,0,0,0],
+            [0,0,0,0,1,1,1,1,0,0],
+            [0,0,0,0,0,0,1,1,0,0],
+            [0,0,0,0,0,0,1,1,1,1]];
 
         var visited=[[0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0,0,0]];
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0]];
         var ghostPos = {x: 5, y: 2};
-        var pacmanpos = {x: 9, y: 9};
+        var pacmanPos = {x: 9, y: 9};
 
-        var pathToPacman = [];
-        console.log(findPath(matrix, ghostPos, pacmanpos, pathToPacman));
-        console.log(pathToPacman);
-        var str2 = "";
+//        var pathToPacman = [];
+//        console.log(findPath(matrix, ghostPos, pacmanPos, pathToPacman));
+//        console.log(pathToPacman);
+//        var str2 = "";
+//
+//        str += "<br>";
+//        for(var i = 0; i < MAT_MAX; i++)
+//        {
+//            for(var j = 0; j < MAT_MAX; j++) {
+//                str = str + matrix[i][j].toString() + " ";
+//            }
+//            // str = str + "\n";
+//            str = str + "<br>";
+//        }
+//        b.innerHTML += str;
+//
+//        for(i = 1; i < pathToPacman[0].size; i++)
+//            str2 += "(" + pathToPacman[i].x + ", " + pathToPacman[i].y + "), ";
+//        str2 += "<br>";
+//        b.innerHTML += str2;
 
-        str += "<br>";
-        for(var i = 0; i < MAT_MAX; i++)
-        {
-            for(var j = 0; j < MAT_MAX; j++) {
-                str = str + matrix[i][j].toString() + " ";
-            }
-            // str = str + "\n";
-            str = str + "<br>";
-        }
-        b.innerHTML += str;
-
-        for(i = 1; i < pathToPacman[0].size; i++)
-            str2 += "(" + pathToPacman[i].x + ", " + pathToPacman[i].y + "), ";
-        str2 += "<br>";
-        b.innerHTML += str2;
-
-//    movePacman(matrix, pacmanpos, ghostPos);
+        movePacman(matrix, matrixCopy, pacmanPos, ghostPos);
     }
     main();
 </script>
