@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+
+    class Queue {
+        constructor() {
+            this.items = [];
+        }
+        isEmpty() {
+            return this.items.length === 0;
+        }
+        enqueue(elements) {
+            this.items.push(elements);
+        }
+        dequeue() {
+            if(this.isEmpty())
+                return "Underflow";
+            return this.items.shift();
+        }
+        front() {
+            if(this.isEmpty())
+                return "No elements in Queue";
+            return this.items[0];
+        }
+        printQueue()
+        {
+            var str = "";
+            for(var i = 0; i < this.items.length; i++)
+                str += "(" + this.items[0].pt.x.toString() + ", " + this.items[0].pt.y.toString() + "), " + this.items[0].dist + "; ";
+            return str;
+        }
+    }
+    //    var queue = new Queue();
+    //    console.log(queue.dequeue());
+    //    console.log(queue.isEmpty());
+    //    queue.enqueue(10);
+    //    queue.enqueue(20);
+    //    queue.enqueue(30);
+    //    queue.enqueue(40);
+    //    queue.enqueue(50);
+    //    queue.enqueue(60);
+    //    console.log(queue.front());
+    //    console.log(queue.dequeue());
+    //    console.log(queue.front());
+    //    console.log(queue.dequeue());
+    //    console.log(queue.printQueue());
+
+    str = "";
+    b = document.getElementsByTagName("body")[0];
+    b.innerHTML = "";
+    MAT_MAX = 10;
+
+    function isValid(row, col)
+    {
+        // return true if row number and column number
+        // is in range
+        return ((row >= 0) && (row < MAT_MAX) && (col >= 0) && (col < MAT_MAX));
+    }
+
+    // These arrays are used to get row and column
+    // numbers of 4 neighbours of a given cell
+    rowNum = [-1, 0, 0, 1];
+    colNum = [0, -1, 1, 0];
+
+    function findPath(matrix, ghostPos, pacmanPos, pathToPacman) {
+        console.log(matrix);
+        console.log(ghostPos);
+        console.log(pacmanPos);
+        var visited=[[0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]];
+        // check source and destination cell
+        // of the matrix have value 1
+        if (matrix[ghostPos.x][ghostPos.y] === 0 || matrix[pacmanPos.x][pacmanPos.y] === 0)
+            return -1;
+
+//        bool visited[ROW][COL];
+//        memset(visited, false, sizeof visited);
+
+        // Mark the source cell as visited
+        visited[ghostPos.x][ghostPos.y] = true;
+
+        // Create a queue for BFS
+        var q = new Queue();
+
+        // distance of source cell is 0
+        var s = {pt: ghostPos, dist: 0};
+        q.enqueue(s);  // Enqueue source cell
+
+        var count = 0, str3 = "", temp = [];
+        // Do a BFS starting from source cell
+        while (q.isEmpty() !== true)
+        {
+            var curr = q.front();
+            var pt = curr.pt;
+
+            temp[count++] = curr;
+//            console.log(q.printQueue())
+//            console.log(pathToPacman[count-1].printQueue());
+            // If we have reached the destination cell,
+            // we are done
+            if (pt.x === pacmanPos.x && pt.y === pacmanPos.y) {
+                for(var k = 0; k < temp.length; k++)
+                    str3 += "(" + temp[k].pt.x.toString() + ", " + temp[k].pt.y.toString() + "), " + temp[k].dist + "; ";
+
+                str3 += "<br><br><br><br>";
+
+                var earlierPoint = temp[temp.length - 1];
+                for(var l = temp.length - 2; l >= 0; l--) {
+                    if((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
+                        pathToPacman.push(temp[l].pt);
+                        earlierPoint = temp[l];
+                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
+                    }
+                }
+                pathToPacman = pathToPacman.reverse();
+                pathToPacman.push(pacmanPos);
+                console.log(pathToPacman);
+                b.innerHTML += str3;
+
+                return curr.dist;
+            }
+
+            // Otherwise dequeue the front cell in the queue
+            // and enqueue its adjacent cells
+            q.dequeue();
+
+            for (var i = 0; i < 4; i++)
+            {
+                var row = pt.x + rowNum[i];
+                var col = pt.y + colNum[i];
+
+                // if adjacent cell is valid, has path and
+                // not visited yet, enqueue it.
+                if (isValid(row, col) === true && matrix[row][col] === 1 && visited[row][col] === 0)
+                {
+                    // mark cell as visited and enqueue it
+                    visited[row][col] = 1;
+                    var Adjcell = {pt: {x: row, y: col}, dist: curr.dist + 1};
+                    q.enqueue(Adjcell);
+                }
+            }
+        }
+
+        //return -1 if destination cannot be reached
+        return -1;
+    }
+
+    function moveGhost(matrix, matrixOriginal, currentpos, pacmanpos) {
+
+        var pathToPacman = [];
+        findPath(matrixOriginal, currentpos, pacmanpos, pathToPacman);
+
+        matrix[pathToPacman[1].x][pathToPacman[1].y] = 0;
+        matrix[pathToPacman[2].x][pathToPacman[2].y] = 5;
+        currentpos.x = pathToPacman[2].x;
+        currentpos.y = pathToPacman[2].y;
+        return currentpos;
+    }
+
+    function movePacman(matrixOriginal, pacmanpos, ghostPos) {
+        var matrix=[[0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]], i, j;
+//    var str = "";
+//    var b = document.getElementsByTagName("body")[0];
+        number = setInterval(function() {
+            ghostPos = moveGhost(matrix, matrixOriginal, ghostPos, pacmanpos);
+            var map = {}; // You could also use an array
+            onkeydown = onkeyup = function(event) {
+                event = event || event; // to deal with IE
+                map[event.keyCode] = event.type == 'keydown';
+                /* insert conditional here */
+                if (map[37] == true || map[38] == true || map[39] == true || map[40] == true) {
+                    if (map[38] == true) {
+                        if (pacmanpos.x - 1 >= 0 && pacmanpos.x - 1 < MAT_MAX && pacmanpos.y >= 0 && pacmanpos.y < MAT_MAX) {
+                            matrix[pacmanpos.x][pacmanpos.y] = 0;
+                            matrix[--pacmanpos.x][pacmanpos.y] = 1;
+                        }
+                    }
+                    if (map[37] == true) {
+                        if (pacmanpos.x >= 0 && pacmanpos.x < MAT_MAX && pacmanpos.y - 1 >= 0 && pacmanpos.y - 1 < MAT_MAX) {
+                            matrix[pacmanpos.x][pacmanpos.y] = 0;
+                            matrix[pacmanpos.x][--pacmanpos.y] = 1;
+                        }
+                    }
+                    if (map[40] == true) {
+                        if (pacmanpos.x + 1 >= 0 && pacmanpos.x + 1 < MAT_MAX && pacmanpos.y >= 0 && pacmanpos.y < MAT_MAX) {
+                            matrix[pacmanpos.x][pacmanpos.y] = 0;
+                            matrix[++pacmanpos.x][pacmanpos.y] = 1;
+                        }
+                    }
+                    if (map[39] == true) {
+                        if (pacmanpos.x >= 0 && pacmanpos.x < MAT_MAX && pacmanpos.y + 1 >= 0 && pacmanpos.y + 1 < MAT_MAX) {
+                            matrix[pacmanpos.x][pacmanpos.y] = 0;
+                            matrix[pacmanpos.x][++pacmanpos.y] = 1;
+                        }
+                    }
+                }
+            };
+            str = "";
+            for(var i = 0; i < MAT_MAX; i++)
+            {
+                for(var j = 0; j < MAT_MAX; j++) {
+                    str = str + matrix[i][j].toString() + " ";
+                }
+                // str = str + "\n";
+                str = str + "<br>";
+            }
+            b.innerHTML += str;
+            // console.log(str);
+            // console.log("\n\n");
+        }, 2000);
+    }
+
+    function main() {
+        var matrix=[[1,1,1,1,1,0,0,1,0,0],
+                    [0,1,0,0,1,1,1,1,0,0],
+                    [0,1,0,0,0,0,0,0,0,0],
+                    [0,1,0,0,0,0,0,0,0,0],
+                    [0,1,0,0,1,1,1,0,0,0],
+                    [0,1,1,1,1,1,1,0,0,0],
+                    [0,0,1,1,1,0,0,0,0,0],
+                    [0,0,0,0,1,1,1,1,0,0],
+                    [0,0,0,0,0,0,1,1,0,0],
+                    [0,0,0,0,0,0,1,1,1,1]], i, j;
+
+        var visited=[[0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0]];
+        var ghostPos = {x: 5, y: 2};
+        var pacmanpos = {x: 9, y: 9};
+
+        var pathToPacman = [];
+        console.log(findPath(matrix, ghostPos, pacmanpos, pathToPacman));
+        console.log(pathToPacman);
+        var str2 = "";
+
+        str += "<br>";
+        for(var i = 0; i < MAT_MAX; i++)
+        {
+            for(var j = 0; j < MAT_MAX; j++) {
+                str = str + matrix[i][j].toString() + " ";
+            }
+            // str = str + "\n";
+            str = str + "<br>";
+        }
+        b.innerHTML += str;
+
+        for(i = 1; i < pathToPacman[0].size; i++)
+            str2 += "(" + pathToPacman[i].x + ", " + pathToPacman[i].y + "), ";
+        str2 += "<br>";
+        b.innerHTML += str2;
+
+//    movePacman(matrix, pacmanpos, ghostPos);
+    }
+    main();
+</script>
+</html>
