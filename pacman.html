@@ -60,8 +60,8 @@
                 ['B', 'P', 'b', '0', '0', 'b', 'p', 'b', '0', '0', '0', 'b', 'p', 'b', 'b', 'p', 'b', '0', '0', '0', 'b', 'p', 'b', '0', '0', 'b', 'P', 'B'],
                 ['B', 'p', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'p', 'B'],
                 ['B', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'B'],
-                ['B', 'p', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'p', 'B'],
-                ['B', 'p', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'p', 'B'],
+                ['B', 'p', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'p', 'B'],
+                ['B', 'p', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'p', 'B'],
                 ['B', 'p', 'p', 'p', 'p', 'p', 'p', 'b', 'b', 'p', 'p', 'p', 'p', 'b', 'b', 'p', 'p', 'p', 'p', 'b', 'b', 'p', 'p', 'p', 'p', 'p', 'p', 'B'],
                 ['B', 'B', 'B', 'B', 'B', 'B', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'B', 'B', 'B', 'B', 'B', 'B'],
                 ['0', '0', '0', '0', '0', 'B', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'b', 'b', 'p', 'b', 'b', 'b', 'b', 'b', 'p', 'B', '0', '0', '0', '0', '0'],
@@ -70,7 +70,7 @@
                 ['B', 'B', 'B', 'B', 'B', 'B', 'p', 'b', 'b', '0', 'B', '0', '0', '0', '0', '0', '0', 'B', '0', 'b', 'b', 'p', 'B', 'B', 'B', 'B', 'B', 'B'],
                 ['0', '0', '0', '0', '0', '0', 'p', '0', '0', '0', 'B', '0', '0', '0', '0', '0', '0', 'B', '0', '0', '0', 'p', '0', '0', '0', '0', '0', '0'],
                 ['B', 'B', 'B', 'B', 'B', 'B', 'p', 'b', 'b', '0', 'B', '0', '0', '0', '0', '0', '0', 'B', '0', 'b', 'b', 'p', 'B', 'B', 'B', 'B', 'B', 'B'],
-                ['0', '0', '0', '0', '0', 'B', 'p', 'b', 'b', '0', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', '0', 'b', 'b', 'p', 'B', '0', '0', '0', '0', '0'],
+                ['0', '0', '0', '0', '0', 'B', 'p', 'b', 'b', '0', 'B', 'B', 'B', '-', '-', 'B', 'B', 'B', '0', 'b', 'b', 'p', 'B', '0', '0', '0', '0', '0'],
                 ['0', '0', '0', '0', '0', 'B', 'p', 'b', 'b', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'b', 'b', 'p', 'B', '0', '0', '0', '0', '0'],
                 ['0', '0', '0', '0', '0', 'B', 'p', 'b', 'b', '0', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', '0', 'b', 'b', 'p', 'B', '0', '0', '0', '0', '0'],
                 ['B', 'B', 'B', 'B', 'B', 'B', 'p', 'b', 'b', '0', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', '0', 'b', 'b', 'p', 'B', 'B', 'B', 'B', 'B', 'B'],
@@ -111,15 +111,16 @@
     rowNum = [-1, 0, 0, 1];
     colNum = [0, -1, 1, 0];
 
-    function findPath(matrix, blinkyPos, pacmanPos, pathToPacman) {
-        var visited = generateVisited();
+    function findPath(matrix, blinkyPos, pacmanPos, pathToPacman, blinkyMotionDirection) {
         // check source and destination cell
         // of the matrix have value 1
-        if (!(matrix[blinkyPos.x][blinkyPos.y] === '0' || matrix[pacmanPos.x][pacmanPos.y] === '0' || matrix[blinkyPos.x][blinkyPos.y] === 'p' || matrix[pacmanPos.x][pacmanPos.y] === 'p' || matrix[blinkyPos.x][blinkyPos.y] === 'P' || matrix[pacmanPos.x][pacmanPos.y] === 'P'))
+        if (!(matrix[blinkyPos.x][blinkyPos.y] === '-' || matrix[blinkyPos.x][blinkyPos.y] === '0' || matrix[pacmanPos.x][pacmanPos.y] === '0' || matrix[blinkyPos.x][blinkyPos.y] === 'p' || matrix[pacmanPos.x][pacmanPos.y] === 'p' || matrix[blinkyPos.x][blinkyPos.y] === 'P' || matrix[pacmanPos.x][pacmanPos.y] === 'P')) {
             return -1;
+        }
 
 //        bool visited[ROW][COL];
 //        memset(visited, false, sizeof visited);
+        var visited = generateVisited();
 
         // Mark the source cell as visited
         visited[blinkyPos.x][blinkyPos.y] = 1;
@@ -171,12 +172,14 @@
 
             for (var i = 0; i < 4; i++)
             {
+                if(count === 1 && blinkyMotionDirection.x === -1 * rowNum[i] && blinkyMotionDirection.y === -1 * colNum[i])
+                    continue;
                 var row = pt.x + rowNum[i];
                 var col = pt.y + colNum[i];
 
                 // if adjacent cell is valid, has path and
                 // not visited yet, enqueue it.
-                if (isValid(row, col) === true && (matrix[row][col] === 'p' || matrix[row][col] === 'P') && visited[row][col] === 0)
+                if (isValid(row, col) === true && (matrix[row][col] === 'p' || matrix[row][col] === 'P' || matrix[row][col] === '-' || matrix[row][col] === '0') && visited[row][col] === 0)
                 {
                     // mark cell as visited and enqueue it
                     visited[row][col] = 1;
@@ -189,17 +192,40 @@
         return -1;// if destination cannot be reached
     }
 
-    function moveBlinky(matrix, matrixCopy, currentPos, pacmanPos) {
-
-        var pathToPacman = [];
-        findPath(matrix, currentPos, pacmanPos, pathToPacman);
-
-        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
+    function moveBlinky(matrix, matrixCopy, currentPos, pacmanPos, blinkyMotionDirection) {
+        if(currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) {
+            clearInterval(pacmanInterval);
+            clearInterval(blinkyInterval);
+            b.innerHTML = "<h1>Game Over</h1>";
+        }
+        var temp, pathToPacman = [];
+        findPath(matrix, currentPos, pacmanPos, pathToPacman, blinkyMotionDirection);
+        if(matrix[pathToPacman[0].x][pathToPacman[0].y] === 'p')
+            temp = '.';
+        else if(matrix[pathToPacman[0].x][pathToPacman[0].y] === 'P')
+            temp = 'O';
+        else if(matrix[pathToPacman[0].x][pathToPacman[0].y] === '0')
+            temp = ' ';
+        else if(matrix[pathToPacman[0].x][pathToPacman[0].y] === 'B')
+            temp = '#';
+        else if(matrix[pathToPacman[0].x][pathToPacman[0].y] === 'b')
+            temp = '*';
+        else if(matrix[pathToPacman[0].x][pathToPacman[0].y] === '-')
+            temp = '_';
+        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = temp;
         matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'g';
+
+        blinkyMotionDirection.x = pathToPacman[1].x - pathToPacman[0].x;
+        console.log(blinkyMotionDirection.x, " = ", pathToPacman[1].x, " - ", pathToPacman[0].x);
+        // blinkyMotionDirection.y equals 1 => going right, blinkyMotionDirection.y equals -1 => going left, blinkyMotionDirection.y equals 0 => no change in 'y' direction
+        blinkyMotionDirection.y = pathToPacman[1].y - pathToPacman[0].y;
+        console.log(blinkyMotionDirection.y, " = ", pathToPacman[1].y, " - ", pathToPacman[0].y);
+
         if(pathToPacman.length === 1)
             return "gameOver";
         currentPos.x = pathToPacman[1].x;
         currentPos.y = pathToPacman[1].y;
+
         return currentPos;
     }
 
@@ -209,34 +235,42 @@
             event = event || event;
             map[event.keyCode] = event.type == 'keydown';
             if (map[37] == true || map[38] == true || map[39] == true || map[40] == true) {
+                if(blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) {
+                    clearInterval(pacmanInterval);
+                    clearInterval(blinkyInterval);
+                    b.innerHTML = "<h1>Game Over</h1>";
+                }
                 if (map[38] == true) {
                     if (pacmanPos.x - 1 >= 0 && pacmanPos.x - 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x - 1][pacmanPos.y] === 'p' || matrix[pacmanPos.x - 1][pacmanPos.y] === 'P' || matrix[pacmanPos.x - 1][pacmanPos.y] === '0')) {
-                        console.log("up");
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = '0';
+                        matrix[pacmanPos.x][pacmanPos.y] = '0';
+                        matrixCopy[pacmanPos.x][pacmanPos.y] = ' ';
                         matrixCopy[--pacmanPos.x][pacmanPos.y] = '@';
                     }
                 }
                 if (map[37] == true) {
                     if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y - 1 >= 0 && pacmanPos.y - 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y - 1] === 'p' || matrix[pacmanPos.x][pacmanPos.y - 1] === 'P' || matrix[pacmanPos.x][pacmanPos.y - 1] === '0')) {
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = '0';
+                        matrix[pacmanPos.x][pacmanPos.y] = '0';
+                        matrixCopy[pacmanPos.x][pacmanPos.y] = ' ';
                         matrixCopy[pacmanPos.x][--pacmanPos.y] = '@';
                     }
                 }
                 if (map[40] == true) {
                     if (pacmanPos.x + 1 >= 0 && pacmanPos.x + 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x + 1][pacmanPos.y] === 'p' || matrix[pacmanPos.x + 1][pacmanPos.y] === 'P' || matrix[pacmanPos.x + 1][pacmanPos.y] === '0')) {
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = '0';
+                        matrix[pacmanPos.x][pacmanPos.y] = '0';
+                        matrixCopy[pacmanPos.x][pacmanPos.y] = ' ';
                         matrixCopy[++pacmanPos.x][pacmanPos.y] = '@';
                     }
                 }
                 if (map[39] == true) {
                     if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y + 1 >= 0 && pacmanPos.y + 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y + 1] === 'p' || matrix[pacmanPos.x][pacmanPos.y + 1] === 'P' || matrix[pacmanPos.x][pacmanPos.y + 1] === '0')) {
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = '0';
+                        matrix[pacmanPos.x][pacmanPos.y] = '0';
+                        matrixCopy[pacmanPos.x][pacmanPos.y] = ' ';
                         matrixCopy[pacmanPos.x][++pacmanPos.y] = '@';
                     }
                 }
             }
         };
-        str = "";
+        str = "<pre>";
         b.innerHTML = "";
         for(var i = 0; i < ROW_MAX; i++)
         {
@@ -245,29 +279,44 @@
             // str = str + "\n";
             str = str + "<br>";
         }
+        str += "<pre>";
         b.innerHTML += str;
-        if(blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) {
-            clearInterval(pacmanInterval);
-            clearInterval(blinkyInterval);
-            b.innerHTML = "<h1>Game Over</h1>";
-        }
     }
 
     function main() {
-        var matrix = levelGenerator(1);
+        var i, j;
 
+        var blinkyPos = {x: 15, y: 13};
+        var pacmanPos = {x: 26, y: 15};
+
+        var matrix = levelGenerator(1);
         var matrixCopy = levelGenerator(1);
 
-        var visited = generateVisited();
-        var blinkyPos = {x: 24, y: 9};
-        var pacmanPos = {x: 5, y: 2};
+        for(i = 0; i < ROW_MAX; i++) {
+            for(j = 0; j < COL_MAX; j++) {
+                if(matrix[i][j] === 'p')
+                    matrixCopy[i][j] = '.';
+                else if(matrix[i][j] === 'P')
+                    matrixCopy[i][j] = 'O';
+                else if(matrix[i][j] === '0')
+                    matrixCopy[i][j] = ' ';
+                else if(matrix[i][j] === 'B')
+                    matrixCopy[i][j] = '#';
+                else if(matrix[i][j] === 'b')
+                    matrixCopy[i][j] = '*';
+                else if(matrix[i][j] === '-')
+                    matrixCopy[i][j] = '_';
+            }
+        }
+        matrixCopy[pacmanPos.x][pacmanPos.y] = '@';
 
         pacmanInterval = setInterval(function() {
             movePacman(matrix, matrixCopy, pacmanPos, blinkyPos);
         }, pacmanSpeed);
-
+        var blinkyMotionDirection = {x: -1, y: 0};
         blinkyInterval = setInterval(function() {
-            blinkyPos = moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos);
+            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
+            blinkyPos = moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection);
             if(blinkyPos === "gameOver") {
                 clearInterval(pacmanInterval);
                 clearInterval(blinkyInterval);
