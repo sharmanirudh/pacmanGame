@@ -1,0 +1,1296 @@
+/* fonts */
+/* @import url(https://fonts.googleapis.com/css?family=Open+Sans: 400, 300); */
+
+$size: 2;
+$cols: 8;
+$rows: 8;
+$primary: rgb(255, 0, 0);
+$red: rgb(255, 0, 0);
+$purple: rgb(56, 103, 252);
+$blue: rgb(7, 0, 227);
+$white: rgb(224, 224, 224);
+$pink: rgb(242, 184, 255);
+
+html,
+body {
+  font-size: .625em;
+  background: black;
+  color: white;
+  font-size: 25pt;
+}
+
+.ijkl {
+  display: flex;
+  flex-wrap: wrap;
+  height: 31*$size*$rows+px;
+  width: 28*$size*$cols+px;
+}
+
+.ze {
+  height: 16px;
+  width: 16px;
+}
+
+.B1 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B1::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+  6*$size+px 0 $purple,
+  7*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+  3*$size+px 1*$size+px $purple,
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  2*$size+px 2*$size+px $purple,
+      /* row 3 */
+  2*$size+px 3*$size+px $purple,
+  6*$size+px 3*$size+px $purple,
+  7*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple,
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  5*$size+px 4*$size+px $purple,
+      /* row 5 */
+  1*$size+px 5*$size+px $purple,
+  4*$size+px 5*$size+px $purple,
+      /* row 6 */
+  1*$size+px 6*$size+px $purple,
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+  4*$size+px 7*$size+px $purple;
+}
+
+
+.B7 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B7::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  2*$size+px 0 $purple,
+  3*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+  6*$size+px 1*$size+px $purple,
+      /* row 2 */
+  7*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  2*$size+px 3*$size+px $purple,
+  3*$size+px 3*$size+px $purple,
+  7*$size+px 3*$size+px $purple,
+      /* row 4 */
+  4*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+  8*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+  8*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple;
+}
+
+.B5 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B5::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+  8*$size+px 1*$size+px $purple,
+      /* row 2 */
+  5*$size+px 2*$size+px $purple,
+  8*$size+px 2*$size+px $purple,
+      /* row 3 */
+  4*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple,
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  2*$size+px 4*$size+px $purple,
+  3*$size+px 4*$size+px $purple,
+  7*$size+px 4*$size+px $purple,
+      /* row 5 */
+  7*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+  6*$size+px 6*$size+px $purple,
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+  2*$size+px 7*$size+px $purple,
+  3*$size+px 7*$size+px $purple,
+  4*$size+px 7*$size+px $purple;
+}
+
+.B3 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B3::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+      /* row 1 */
+  1*$size+px 1*$size+px $purple,
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  1*$size+px 2*$size+px $purple,
+  4*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  5*$size+px 3*$size+px $purple,
+      /* row 4 */
+  2*$size+px 4*$size+px $purple,
+  6*$size+px 4*$size+px $purple,
+  7*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  2*$size+px 5*$size+px $purple,
+      /* row 6 */
+  3*$size+px 6*$size+px $purple,
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+  6*$size+px 7*$size+px $purple,
+  7*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple;
+}
+
+.B2 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B2::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+  8*$size+px 1*$size+px $purple,
+      /* row 2 */
+  5*$size+px 2*$size+px $purple,
+  8*$size+px 2*$size+px $purple,
+      /* row 3 */
+  5*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple,
+      /* row 4 */
+  5*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+  8*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+  8*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple;
+}
+
+.B6 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B6::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+      /* row 1 */
+  1*$size+px 1*$size+px $purple,
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  1*$size+px 2*$size+px $purple,
+  4*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  4*$size+px 3*$size+px $purple,
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  4*$size+px 4*$size+px $purple,
+      /* row 5 */
+  1*$size+px 5*$size+px $purple,
+  4*$size+px 5*$size+px $purple,
+      /* row 6 */
+  1*$size+px 6*$size+px $purple,
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+  4*$size+px 7*$size+px $purple;
+}
+
+.b8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b8::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+    /* row 0 */
+    /* row 1 */
+    /* row 2 */
+    /* row 3 */
+    /* row 4 */
+    1*$size+px 4*$size+px $purple,
+    2*$size+px 4*$size+px $purple,
+    3*$size+px 4*$size+px $purple,
+    4*$size+px 4*$size+px $purple,
+    5*$size+px 4*$size+px $purple,
+    6*$size+px 4*$size+px $purple,
+    7*$size+px 4*$size+px $purple,
+    8*$size+px 4*$size+px $purple;
+    /* row 5 */
+    /* row 6 */
+    /* row 7 */ 
+}
+
+.b7 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b7::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  2*$size+px 4*$size+px $purple,
+      /* row 5 */
+  3*$size+px 5*$size+px $purple,
+      /* row 6 */
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  4*$size+px 7*$size+px $purple;
+}
+
+.b1 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b1::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+  7*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  6*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple;
+}
+
+.b4 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b4::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+    /* row 0 */
+    /* row 1 */
+    /* row 2 */
+    /* row 3 */
+    1*$size+px 3*$size+px $purple,
+    2*$size+px 3*$size+px $purple,
+    3*$size+px 3*$size+px $purple,
+    4*$size+px 3*$size+px $purple,
+    5*$size+px 3*$size+px $purple,
+    6*$size+px 3*$size+px $purple,
+    7*$size+px 3*$size+px $purple,
+    8*$size+px 3*$size+px $purple;
+    /* row 4 */
+    /* row 5 */
+    /* row 6 */
+    /* row 7 */ 
+}
+
+.b5 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b5::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+        /* row 0 */    
+    4*$size+px 0 $purple,
+        /* row 1 */
+    4*$size+px 1*$size+px $purple,
+        /* row 2 */
+    3*$size+px 2*$size+px $purple,
+        /* row 3 */
+    1*$size+px 3*$size+px $purple,
+    2*$size+px 3*$size+px $purple;
+        /* row 4 */
+        /* row 5 */
+        /* row 6 */
+        /* row 7 */
+
+}
+
+.b3 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b3::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+      /* row 2 */
+  6*$size+px 2*$size+px $purple,
+      /* row 3 */
+  8*$size+px 3*$size+px $purple,
+  7*$size+px 3*$size+px $purple;
+      /* row 4 */
+      /* row 5 */
+      /* row 6 */
+      /* row 7 */
+}
+
+.b6 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b6::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  4*$size+px 0 $purple,
+      /* row 1 */
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  4*$size+px 2*$size+px $purple,
+      /* row 3 */
+  4*$size+px 3*$size+px $purple,
+      /* row 4 */
+  4*$size+px 4*$size+px $purple,
+      /* row 5 */
+  4*$size+px 5*$size+px $purple,
+      /* row 6 */
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  4*$size+px 7*$size+px $purple;
+}
+
+.b2 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.b2::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+      /* row 2 */
+  5*$size+px 2*$size+px $purple,
+      /* row 3 */
+  5*$size+px 3*$size+px $purple,
+      /* row 4 */
+  5*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple;
+}
+
+.H5 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.H5::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+      /* row 1 */
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  4*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  2*$size+px 3*$size+px $purple,
+  3*$size+px 3*$size+px $purple,
+  4*$size+px 3*$size+px $purple;
+  /* row 4 */
+  /* row 5 */
+  /* row 6 */
+  /* row 7 */
+}
+
+.H3 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.H3::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+      /* row 2 */
+  5*$size+px 2*$size+px $purple,
+      /* row 3 */
+  5*$size+px 3*$size+px $purple,
+  6*$size+px 3*$size+px $purple,
+  7*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple;
+  /* row 4 */
+  /* row 5 */
+  /* row 6 */
+  /* row 7 */
+}
+
+.H1 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.H1::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+  5*$size+px 4*$size+px $purple,
+  6*$size+px 4*$size+px $purple,
+  7*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple;
+}
+
+.H7 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.H7::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  2*$size+px 4*$size+px $purple,
+  3*$size+px 4*$size+px $purple,
+  4*$size+px 4*$size+px $purple,
+      /* row 5 */
+  4*$size+px 5*$size+px $purple,
+      /* row 6 */
+  4*$size+px 6*$size+px $purple,
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+  4*$size+px 7*$size+px $purple;
+}
+
+.pp {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.pp::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+        /* row 0 */    
+        /* row 1 */
+        /* row 2 */
+        /* row 3 */
+    4*$size+px 3*$size+px $white,
+    5*$size+px 3*$size+px $white,
+    /* row 4 */
+    4*$size+px 4*$size+px $white,
+    5*$size+px 4*$size+px $white;
+        /* row 5 */
+        /* row 6 */
+        /* row 7 */
+}
+
+.PP {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.PP::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+        /* row 0 */
+    3*$size+px 0 $white,
+    4*$size+px 0 $white,
+    5*$size+px 0 $white,
+    6*$size+px 0 $white,
+        /* row 1 */
+    2*$size+px 1*$size+px $white,
+    3*$size+px 1*$size+px $white,
+    4*$size+px 1*$size+px $white,
+    5*$size+px 1*$size+px $white,
+    6*$size+px 1*$size+px $white,
+    7*$size+px 1*$size+px $white,
+        /* row 2 */
+    1*$size+px 2*$size+px $white,
+    2*$size+px 2*$size+px $white,
+    3*$size+px 2*$size+px $white,
+    4*$size+px 2*$size+px $white,
+    5*$size+px 2*$size+px $white,
+    6*$size+px 2*$size+px $white,
+    7*$size+px 2*$size+px $white,
+    8*$size+px 2*$size+px $white,
+        /* row 3 */
+    1*$size+px 3*$size+px $white,
+    2*$size+px 3*$size+px $white,
+    3*$size+px 3*$size+px $white,
+    4*$size+px 3*$size+px $white,
+    5*$size+px 3*$size+px $white,
+    6*$size+px 3*$size+px $white,
+    7*$size+px 3*$size+px $white,
+    8*$size+px 3*$size+px $white,
+        /* row 4 */
+    1*$size+px 4*$size+px $white,
+    2*$size+px 4*$size+px $white,
+    3*$size+px 4*$size+px $white,
+    4*$size+px 4*$size+px $white,
+    5*$size+px 4*$size+px $white,
+    6*$size+px 4*$size+px $white,
+    7*$size+px 4*$size+px $white,
+    8*$size+px 4*$size+px $white,
+        /* row 5 */
+    1*$size+px 5*$size+px $white,
+    2*$size+px 5*$size+px $white,
+    3*$size+px 5*$size+px $white,
+    4*$size+px 5*$size+px $white,
+    5*$size+px 5*$size+px $white,
+    6*$size+px 5*$size+px $white,
+    7*$size+px 5*$size+px $white,
+    8*$size+px 5*$size+px $white,
+        /* row 6 */
+    2*$size+px 6*$size+px $white,
+    3*$size+px 6*$size+px $white,
+    4*$size+px 6*$size+px $white,
+    5*$size+px 6*$size+px $white,
+    6*$size+px 6*$size+px $white,
+    7*$size+px 6*$size+px $white,
+        /* row 7 */
+    3*$size+px 7*$size+px $white,
+    4*$size+px 7*$size+px $white,
+    5*$size+px 7*$size+px $white,
+    6*$size+px 7*$size+px $white;
+}
+
+.H8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.H8::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+      /* row 5 */
+  1*$size+px 5*$size+px $pink,
+  2*$size+px 5*$size+px $pink,
+  3*$size+px 5*$size+px $pink,
+  4*$size+px 5*$size+px $pink,
+  5*$size+px 5*$size+px $pink,
+  6*$size+px 5*$size+px $pink,
+  7*$size+px 5*$size+px $pink,
+  8*$size+px 5*$size+px $pink,
+      /* row 6 */
+  1*$size+px 6*$size+px $pink,
+  2*$size+px 6*$size+px $pink,
+  3*$size+px 6*$size+px $pink,
+  4*$size+px 6*$size+px $pink,
+  5*$size+px 6*$size+px $pink,
+  6*$size+px 6*$size+px $pink,
+  7*$size+px 6*$size+px $pink,
+  8*$size+px 6*$size+px $pink;
+        /* row 7 */
+}
+
+.B8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B8::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  2*$size+px 4*$size+px $purple,
+  3*$size+px 4*$size+px $purple,
+  4*$size+px 4*$size+px $purple,
+  5*$size+px 4*$size+px $purple,
+  6*$size+px 4*$size+px $purple,
+  7*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+      /* row 6 */
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+  2*$size+px 7*$size+px $purple,
+  3*$size+px 7*$size+px $purple,
+  4*$size+px 7*$size+px $purple,
+  5*$size+px 7*$size+px $purple,
+  6*$size+px 7*$size+px $purple,
+  7*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple; 
+}
+
+.L8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.L8::before {
+    content: '';
+    display: block;
+    width: $size+px;
+    height: $size+px;
+    box-shadow:
+        /* row 0 */
+        /* row 1 */
+        /* row 2 */
+        /* row 3 */
+        /* row 4 */
+    1*$size+px 4*$size+px $purple,
+    2*$size+px 4*$size+px $purple,
+    3*$size+px 4*$size+px $purple,
+    4*$size+px 4*$size+px $purple,
+    5*$size+px 4*$size+px $purple,
+    6*$size+px 4*$size+px $purple,
+    7*$size+px 4*$size+px $purple,
+    8*$size+px 4*$size+px $purple,
+        /* row 5 */
+    8*$size+px 5*$size+px $purple,
+        /* row 6 */
+    8*$size+px 6*$size+px $purple,
+        /* row 7 */
+    1*$size+px 7*$size+px $purple,
+    2*$size+px 7*$size+px $purple,
+    3*$size+px 7*$size+px $purple,
+    4*$size+px 7*$size+px $purple,
+    5*$size+px 7*$size+px $purple,
+    6*$size+px 7*$size+px $purple,
+    7*$size+px 7*$size+px $purple,
+    8*$size+px 7*$size+px $purple;
+}
+
+.R8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.R8::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+    /* row 0 */
+    /* row 1 */
+    /* row 2 */
+    /* row 3 */
+    /* row 4 */
+    1*$size+px 4*$size+px $purple,
+    2*$size+px 4*$size+px $purple,
+    3*$size+px 4*$size+px $purple,
+    4*$size+px 4*$size+px $purple,
+    5*$size+px 4*$size+px $purple,
+    6*$size+px 4*$size+px $purple,
+    7*$size+px 4*$size+px $purple,
+    8*$size+px 4*$size+px $purple,
+    /* row 5 */
+    1*$size+px 5*$size+px $purple,
+    /* row 6 */
+    1*$size+px 6*$size+px $purple,
+    /* row 7 */
+    1*$size+px 7*$size+px $purple,
+    2*$size+px 7*$size+px $purple,
+    3*$size+px 7*$size+px $purple,
+    4*$size+px 7*$size+px $purple,
+    5*$size+px 7*$size+px $purple,
+    6*$size+px 7*$size+px $purple,
+    7*$size+px 7*$size+px $purple,
+    8*$size+px 7*$size+px $purple,
+}
+
+.B4 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.B4::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow: 
+        /* row 0 */
+    1*$size+px 0 $purple,
+    2*$size+px 0 $purple,
+    3*$size+px 0 $purple,
+    4*$size+px 0 $purple,
+    5*$size+px 0 $purple,
+    6*$size+px 0 $purple,
+    7*$size+px 0 $purple,
+    8*$size+px 0 $purple,
+        /* row 1 */
+        /* row 2 */
+        /* row 3 */
+    1*$size+px 3*$size+px $purple,
+    2*$size+px 3*$size+px $purple,
+    3*$size+px 3*$size+px $purple,
+    4*$size+px 3*$size+px $purple,
+    5*$size+px 3*$size+px $purple,
+    6*$size+px 3*$size+px $purple,
+    7*$size+px 3*$size+px $purple,
+    8*$size+px 3*$size+px $purple;
+        /* row 4 */
+        /* row 5 */
+        /* row 6 */
+        /* row 7 */ 
+}
+
+.E1 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.E1::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+    /* row 0 */
+    1*$size+px 0 $purple,
+    2*$size+px 0 $purple,
+    3*$size+px 0 $purple,
+    4*$size+px 0 $purple,
+    5*$size+px 0 $purple, 
+    6*$size+px 0 $purple,
+    7*$size+px 0 $purple,  
+    8*$size+px 0 $purple,
+    /* row 1 */
+    /* row 2 */
+    /* row 3 */
+    6*$size+px 3*$size+px $purple,
+    7*$size+px 3*$size+px $purple,
+    8*$size+px 3*$size+px $purple,
+    /* row 4 */
+    5*$size+px 4*$size+px $purple,
+    /* row 5 */
+    4*$size+px 5*$size+px $purple,
+    /* row 6 */
+    4*$size+px 6*$size+px $purple,
+    /* row 7 */
+    4*$size+px 7*$size+px $purple;
+}
+
+.E3 {
+    height: $size*$cols+px;
+    width: $size*$rows+px;
+}
+
+.E3::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+      /* row 1 */
+  1*$size+px 1*$size+px $purple,
+  4*$size+px 1*$size+px $purple,
+      /* row 2 */
+  1*$size+px 2*$size+px $purple,
+  4*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  5*$size+px 3*$size+px $purple,
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  6*$size+px 4*$size+px $purple,
+  7*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  1*$size+px 5*$size+px $purple,
+      /* row 6 */
+  1*$size+px 6*$size+px $purple,
+      /* row 7 */
+  1*$size+px 7*$size+px $purple,
+}
+
+.E5 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.E5::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  5*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+  5*$size+px 1*$size+px $purple,
+  8*$size+px 1*$size+px $purple,
+      /* row 2 */
+  5*$size+px 2*$size+px $purple,
+  8*$size+px 2*$size+px $purple,
+      /* row 3 */
+  4*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple,
+      /* row 4 */
+  1*$size+px 4*$size+px $purple,
+  2*$size+px 4*$size+px $purple,
+  3*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  8*$size+px 5*$size+px $purple,
+      /* row 6 */
+  8*$size+px 6*$size+px $purple,
+      /* row 7 */
+  8*$size+px 7*$size+px $purple;
+}
+
+.E7 {
+    height: $size*$cols+px;
+    width: $size*$rows+px;
+}
+
+.E7::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  1*$size+px 0 $purple,
+  2*$size+px 0 $purple,
+  3*$size+px 0 $purple,
+  4*$size+px 0 $purple,
+  5*$size+px 0 $purple,
+  6*$size+px 0 $purple,
+  7*$size+px 0 $purple,
+  8*$size+px 0 $purple,
+      /* row 1 */
+      /* row 2 */
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  2*$size+px 3*$size+px $purple,
+  3*$size+px 3*$size+px $purple,
+      /* row 4 */
+  4*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+}
+
+.C9 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.C9::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+      /* row 0 */
+  8*$size+px 0 $purple,
+      /* row 1 */
+  8*$size+px 1*$size+px $purple,
+      /* row 2 */
+  8*$size+px 2*$size+px $purple,
+      /* row 3 */
+  1*$size+px 3*$size+px $purple,
+  2*$size+px 3*$size+px $purple,
+  3*$size+px 3*$size+px $purple,
+  8*$size+px 3*$size+px $purple,
+      /* row 4 */
+  4*$size+px 4*$size+px $purple,
+  8*$size+px 4*$size+px $purple,
+      /* row 5 */
+  5*$size+px 5*$size+px $purple,
+  8*$size+px 5*$size+px $purple,
+      /* row 6 */
+  5*$size+px 6*$size+px $purple,
+  8*$size+px 6*$size+px $purple,
+      /* row 7 */
+  5*$size+px 7*$size+px $purple,
+  8*$size+px 7*$size+px $purple,
+}
+
+.C8 {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.C8::before {
+  content: '';
+  display: block;
+  width: $size+px;
+  height: $size+px;
+  box-shadow:
+    /* row 0 */
+    1*$size+px 0 $purple,
+    /* row 1 */
+    1*$size+px 1*$size+px $purple,
+    /* row 2 */
+    1*$size+px 2*$size+px $purple,
+    /* row 3 */
+    1*$size+px 3*$size+px $purple,
+    6*$size+px 3*$size+px $purple,
+    7*$size+px 3*$size+px $purple,
+    8*$size+px 3*$size+px $purple,
+    /* row 4 */
+    1*$size+px 4*$size+px $purple,
+    5*$size+px 4*$size+px $purple,
+    /* row 5 */
+    1*$size+px 5*$size+px $purple,
+    4*$size+px 5*$size+px $purple,
+    /* row 6 */
+    1*$size+px 6*$size+px $purple,
+    4*$size+px 6*$size+px $purple,
+    /* row 7 */
+    1*$size+px 7*$size+px $purple,
+    4*$size+px 7*$size+px $purple;
+}
+
+/* ######################################################################################################################### */
+
+$ghostSize: 1;
+
+.ghost {
+  height: $size*$cols+px;
+  width: $size*$rows+px;
+}
+
+.ghost::before {
+  content: '';
+  display: block;
+  width: $ghostSize+px;
+  height: $ghostSize+px;
+  box-shadow:
+  /* row 0 */
+  6*$ghostSize+px 0 $primary,
+  7*$ghostSize+px 0 $primary,
+  8*$ghostSize+px 0 $primary,
+  9*$ghostSize+px 0 $primary,
+      /* row 1 */
+  4*$ghostSize+px 1*$ghostSize+px $primary,
+  5*$ghostSize+px 1*$ghostSize+px $primary,
+  6*$ghostSize+px 1*$ghostSize+px $primary,
+  7*$ghostSize+px 1*$ghostSize+px $primary,
+  8*$ghostSize+px 1*$ghostSize+px $primary,
+  9*$ghostSize+px 1*$ghostSize+px $primary,
+  10*$ghostSize+px 1*$ghostSize+px $primary,
+  11*$ghostSize+px 1*$ghostSize+px $primary,
+      /* row 2 */
+  3*$ghostSize+px 2*$ghostSize+px $primary,
+  4*$ghostSize+px 2*$ghostSize+px $primary,
+  5*$ghostSize+px 2*$ghostSize+px $primary,
+  6*$ghostSize+px 2*$ghostSize+px $primary,
+  7*$ghostSize+px 2*$ghostSize+px $primary,
+  8*$ghostSize+px 2*$ghostSize+px $primary,
+  9*$ghostSize+px 2*$ghostSize+px $primary,
+  10*$ghostSize+px 2*$ghostSize+px $primary,
+  11*$ghostSize+px 2*$ghostSize+px $primary,
+  12*$ghostSize+px 2*$ghostSize+px $primary,
+      /* row 3 */
+  2*$ghostSize+px 3*$ghostSize+px $primary,
+  3*$ghostSize+px 3*$ghostSize+px $white,
+  4*$ghostSize+px 3*$ghostSize+px $white,
+  5*$ghostSize+px 3*$ghostSize+px $primary,
+  6*$ghostSize+px 3*$ghostSize+px $primary,
+  7*$ghostSize+px 3*$ghostSize+px $primary,
+  8*$ghostSize+px 3*$ghostSize+px $primary,
+  9*$ghostSize+px 3*$ghostSize+px $white,
+  10*$ghostSize+px 3*$ghostSize+px $white,
+  11*$ghostSize+px 3*$ghostSize+px $primary,
+  12*$ghostSize+px 3*$ghostSize+px $primary,
+  13*$ghostSize+px 3*$ghostSize+px $primary,
+      /* row 4 */
+  2*$ghostSize+px 4*$ghostSize+px $white,
+  3*$ghostSize+px 4*$ghostSize+px $white,
+  4*$ghostSize+px 4*$ghostSize+px $white,
+  5*$ghostSize+px 4*$ghostSize+px $white,
+  6*$ghostSize+px 4*$ghostSize+px $primary,
+  7*$ghostSize+px 4*$ghostSize+px $primary,
+  8*$ghostSize+px 4*$ghostSize+px $white,
+  9*$ghostSize+px 4*$ghostSize+px $white,
+  10*$ghostSize+px 4*$ghostSize+px $white,
+  11*$ghostSize+px 4*$ghostSize+px $white,
+  12*$ghostSize+px 4*$ghostSize+px $primary,
+  13*$ghostSize+px 4*$ghostSize+px $primary,
+      /* row 5 */
+  2*$ghostSize+px 5*$ghostSize+px $blue,
+  3*$ghostSize+px 5*$ghostSize+px $blue,
+  4*$ghostSize+px 5*$ghostSize+px $white,
+  5*$ghostSize+px 5*$ghostSize+px $white,
+  6*$ghostSize+px 5*$ghostSize+px $primary,
+  7*$ghostSize+px 5*$ghostSize+px $primary,
+  8*$ghostSize+px 5*$ghostSize+px $blue,
+  9*$ghostSize+px 5*$ghostSize+px $blue,
+  10*$ghostSize+px 5*$ghostSize+px $white,
+  11*$ghostSize+px 5*$ghostSize+px $white,
+  12*$ghostSize+px 5*$ghostSize+px $primary,
+  13*$ghostSize+px 5*$ghostSize+px $primary,
+      /* row 6 */
+  1*$ghostSize+px 6*$ghostSize+px $primary,
+  2*$ghostSize+px 6*$ghostSize+px $blue,
+  3*$ghostSize+px 6*$ghostSize+px $blue,
+  4*$ghostSize+px 6*$ghostSize+px $white,
+  5*$ghostSize+px 6*$ghostSize+px $white,
+  6*$ghostSize+px 6*$ghostSize+px $primary,
+  7*$ghostSize+px 6*$ghostSize+px $primary,
+  8*$ghostSize+px 6*$ghostSize+px $blue,
+  9*$ghostSize+px 6*$ghostSize+px $blue,
+  10*$ghostSize+px 6*$ghostSize+px $white,
+  11*$ghostSize+px 6*$ghostSize+px $white,
+  12*$ghostSize+px 6*$ghostSize+px $primary,
+  13*$ghostSize+px 6*$ghostSize+px $primary,
+  14*$ghostSize+px 6*$ghostSize+px $primary,
+      /* row 7 */
+  1*$ghostSize+px 7*$ghostSize+px $primary,
+  2*$ghostSize+px 7*$ghostSize+px $primary,
+  3*$ghostSize+px 7*$ghostSize+px $white,
+  4*$ghostSize+px 7*$ghostSize+px $white,
+  5*$ghostSize+px 7*$ghostSize+px $primary,
+  6*$ghostSize+px 7*$ghostSize+px $primary,
+  7*$ghostSize+px 7*$ghostSize+px $primary,
+  8*$ghostSize+px 7*$ghostSize+px $primary,
+  9*$ghostSize+px 7*$ghostSize+px $white,
+  10*$ghostSize+px 7*$ghostSize+px $white,
+  11*$ghostSize+px 7*$ghostSize+px $primary,
+  12*$ghostSize+px 7*$ghostSize+px $primary,
+  13*$ghostSize+px 7*$ghostSize+px $primary,
+  14*$ghostSize+px 7*$ghostSize+px $primary,
+      /* row 8 */
+  1*$ghostSize+px 8*$ghostSize+px $primary,
+  2*$ghostSize+px 8*$ghostSize+px $primary,
+  3*$ghostSize+px 8*$ghostSize+px $primary,
+  4*$ghostSize+px 8*$ghostSize+px $primary,
+  5*$ghostSize+px 8*$ghostSize+px $primary,
+  6*$ghostSize+px 8*$ghostSize+px $primary,
+  7*$ghostSize+px 8*$ghostSize+px $primary,
+  8*$ghostSize+px 8*$ghostSize+px $primary,
+  9*$ghostSize+px 8*$ghostSize+px $primary,
+  10*$ghostSize+px 8*$ghostSize+px $primary,
+  11*$ghostSize+px 8*$ghostSize+px $primary,
+  12*$ghostSize+px 8*$ghostSize+px $primary,
+  13*$ghostSize+px 8*$ghostSize+px $primary,
+  14*$ghostSize+px 8*$ghostSize+px $primary,
+      /* row 9 */
+  1*$ghostSize+px 9*$ghostSize+px $primary,
+  2*$ghostSize+px 9*$ghostSize+px $primary,
+  3*$ghostSize+px 9*$ghostSize+px $primary,
+  4*$ghostSize+px 9*$ghostSize+px $primary,
+  5*$ghostSize+px 9*$ghostSize+px $primary,
+  6*$ghostSize+px 9*$ghostSize+px $primary,
+  7*$ghostSize+px 9*$ghostSize+px $primary,
+  8*$ghostSize+px 9*$ghostSize+px $primary,
+  9*$ghostSize+px 9*$ghostSize+px $primary,
+  10*$ghostSize+px 9*$ghostSize+px $primary,
+  11*$ghostSize+px 9*$ghostSize+px $primary,
+  12*$ghostSize+px 9*$ghostSize+px $primary,
+  13*$ghostSize+px 9*$ghostSize+px $primary,
+  14*$ghostSize+px 9*$ghostSize+px $primary,
+      /* row 10 */
+  1*$ghostSize+px 10*$ghostSize+px $primary,
+  2*$ghostSize+px 10*$ghostSize+px $primary,
+  3*$ghostSize+px 10*$ghostSize+px $primary,
+  4*$ghostSize+px 10*$ghostSize+px $primary,
+  5*$ghostSize+px 10*$ghostSize+px $primary,
+  6*$ghostSize+px 10*$ghostSize+px $primary,
+  7*$ghostSize+px 10*$ghostSize+px $primary,
+  8*$ghostSize+px 10*$ghostSize+px $primary,
+  9*$ghostSize+px 10*$ghostSize+px $primary,
+  10*$ghostSize+px 10*$ghostSize+px $primary,
+  11*$ghostSize+px 10*$ghostSize+px $primary,
+  12*$ghostSize+px 10*$ghostSize+px $primary,
+  13*$ghostSize+px 10*$ghostSize+px $primary,
+  14*$ghostSize+px 10*$ghostSize+px $primary,
+      /* row 11 */
+  1*$ghostSize+px 11*$ghostSize+px $primary,
+  2*$ghostSize+px 11*$ghostSize+px $primary,
+  3*$ghostSize+px 11*$ghostSize+px $primary,
+  4*$ghostSize+px 11*$ghostSize+px $primary,
+  5*$ghostSize+px 11*$ghostSize+px $primary,
+  6*$ghostSize+px 11*$ghostSize+px $primary,
+  7*$ghostSize+px 11*$ghostSize+px $primary,
+  8*$ghostSize+px 11*$ghostSize+px $primary,
+  9*$ghostSize+px 11*$ghostSize+px $primary,
+  10*$ghostSize+px 11*$ghostSize+px $primary,
+  11*$ghostSize+px 11*$ghostSize+px $primary,
+  12*$ghostSize+px 11*$ghostSize+px $primary,
+  13*$ghostSize+px 11*$ghostSize+px $primary,
+  14*$ghostSize+px 11*$ghostSize+px $primary,
+      /* row 12 */
+  1*$ghostSize+px 12*$ghostSize+px $primary,
+  2*$ghostSize+px 12*$ghostSize+px $primary,
+  4*$ghostSize+px 12*$ghostSize+px $primary,
+  5*$ghostSize+px 12*$ghostSize+px $primary,
+  6*$ghostSize+px 12*$ghostSize+px $primary,
+  9*$ghostSize+px 12*$ghostSize+px $primary,
+  10*$ghostSize+px 12*$ghostSize+px $primary,
+  11*$ghostSize+px 12*$ghostSize+px $primary,
+  13*$ghostSize+px 12*$ghostSize+px $primary,
+  14*$ghostSize+px 12*$ghostSize+px $primary,
+      /* row 13 */
+  1*$ghostSize+px 13*$ghostSize+px $primary,
+  5*$ghostSize+px 13*$ghostSize+px $primary,
+  6*$ghostSize+px 13*$ghostSize+px $primary,
+  9*$ghostSize+px 13*$ghostSize+px $primary,
+  10*$ghostSize+px 13*$ghostSize+px $primary,
+  14*$ghostSize+px 13*$ghostSize+px $primary;
+}
