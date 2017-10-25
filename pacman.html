@@ -16,6 +16,7 @@
     COL_MAX = 28;
     blinkySpeed = 1000;
     pacmanSpeed = 100;
+    pacmanDirection = {x: 1, y: 0};
 
     class Queue {
         constructor() {
@@ -57,8 +58,8 @@
                 ['B6', 'pp', 'b1', 'b8', 'b8', 'b7', 'pp', 'b1', 'b7', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'b1', 'b7', 'pp', 'b1', 'b8', 'b8', 'b7', 'pp', 'B2'],
                 ['B6', 'pp', 'b3', 'b4', 'b4', 'b5', 'pp', 'b2', 'b6', 'pp', 'b3', 'b4', 'b4', 'b7', 'b1', 'b4', 'b4', 'b5', 'pp', 'b2', 'b6', 'pp', 'b3', 'b4', 'b4', 'b5', 'pp', 'B2'],
                 ['B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2'],
-                ['B3', 'B8', 'B8', 'B8', 'B8', 'b7', 'pp', 'b2', 'b6', 'b1', 'b8', 'b7', 'pp', 'b2', 'b6', 'pp', 'b1', 'b8', 'b7', 'b2', 'b6', 'pp', 'b1', 'B8', 'B8', 'B8', 'B8', 'B5'],
-                ['ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'b3', 'b4', 'b5', 'pp', 'b3', 'b5', 'pp', 'b3', 'b4', 'b5', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze'],
+                ['B3', 'B8', 'B8', 'B8', 'B8', 'b7', 'pp', 'b2', 'b3', 'b8', 'b8', 'b7', 'pp', 'b2', 'b6', 'pp', 'b1', 'b8', 'b8', 'b5', 'b6', 'pp', 'b1', 'B8', 'B8', 'B8', 'B8', 'B5'],
+                ['ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'pp', 'b2', 'b1', 'b4', 'b4', 'b5', 'pp', 'b3', 'b5', 'pp', 'b3', 'b4', 'b4', 'b7', 'b6', 'pp', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze'],
                 ['ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze'],
                 ['ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'ze', 'H1', 'B8', 'L8', 'H8', 'H8', 'R8', 'B8', 'H7', 'ze', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze'],
                 ['B4', 'B4', 'B4', 'B4', 'B4', 'b5', 'pp', 'b3', 'b5', 'ze', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'ze', 'b3', 'b5', 'pp', 'b3', 'B4', 'B4', 'B4', 'B4', 'B4'],
@@ -191,10 +192,12 @@
             clearInterval(blinkyInterval);
             b.innerHTML = "<h1>Game Over</h1>";
         }
-        var temp, pathToPacman = [];
+        var pathToPacman = [];
         findPath(matrix, currentPos, pacmanPos, pathToPacman, blinkyMotionDirection);
         matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
         matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'ghost';
+        drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
+        drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
 
         blinkyMotionDirection.x = pathToPacman[1].x - pathToPacman[0].x;
         // blinkyMotionDirection.y equals 1 => going right, blinkyMotionDirection.y equals -1 => going left, blinkyMotionDirection.y equals 0 => no change in 'y' direction
@@ -205,65 +208,22 @@
         currentPos.x = pathToPacman[1].x;
         currentPos.y = pathToPacman[1].y;
 
-        return currentPos;
     }
 
-    function movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, pacmanDirection) {
-        var map = {};
-        console.log(pacmanDirection);
-        onkeydown = onkeyup = function(event) {
-            event = event || event;
-            map[event.keyCode] = event.type == 'keydown';
-            if (map[37] == true || map[38] == true || map[39] == true || map[40] == true) {
-                if(blinkyPos.x == pacmanPos.x && blinkyPos.y == pacmanPos.y) {
-                    clearInterval(pacmanInterval);
-                    clearInterval(blinkyInterval);
-                    b.innerHTML = "<h1>Game Over</h1>";
-                }
-                if (map[38] == true) {
-                    if (pacmanPos.x - 1 >= 0 && pacmanPos.x - 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x - 1][pacmanPos.y] == 'pp' || matrix[pacmanPos.x - 1][pacmanPos.y] == 'PP' || matrix[pacmanPos.x - 1][pacmanPos.y] == 'ze')) {
-                        matrix[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[--pacmanPos.x][pacmanPos.y] = 'ghost';
-                        pacmanDirection = {x: -1, y: 0};
-                    }
-                }
-                if (map[37] == true) {
-                    if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y - 1 >= 0 && pacmanPos.y - 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y - 1] == 'pp' || matrix[pacmanPos.x][pacmanPos.y - 1] == 'PP' || matrix[pacmanPos.x][pacmanPos.y - 1] == 'ze')) {
-                        matrix[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][--pacmanPos.y] = 'ghost';
-                        pacmanDirection = {x: 0, y: -1};
-                    }
-                }
-                if (map[40] == true) {
-                    if (pacmanPos.x + 1 >= 0 && pacmanPos.x + 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x + 1][pacmanPos.y] == 'pp' || matrix[pacmanPos.x + 1][pacmanPos.y] == 'PP' || matrix[pacmanPos.x + 1][pacmanPos.y] == 'ze')) {
-                        matrix[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[++pacmanPos.x][pacmanPos.y] = 'ghost';
-                        pacmanDirection = {x: 1, y: 0};
-                    }
-                }
-                if (map[39] == true) {
-                    if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y + 1 >= 0 && pacmanPos.y + 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y + 1] == 'pp' || matrix[pacmanPos.x][pacmanPos.y + 1] == 'PP' || matrix[pacmanPos.x][pacmanPos.y + 1] == 'ze')) {
-                        matrix[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
-                        matrixCopy[pacmanPos.x][++pacmanPos.y] = 'ghost';
-                        pacmanDirection = {x: 0, y: 1};
-                    }
-                }
-            }
-        };
-        console.log(map);
-        if(map[37] == false && map[38] == false && map[39] == false && map[40] == false) {
+    function movePacman(matrix, matrixCopy, pacmanPos, blinkyPos) {
+        if(blinkyPos.x == pacmanPos.x && blinkyPos.y == pacmanPos.y) {
+            clearInterval(pacmanInterval);
+            clearInterval(blinkyInterval);
+            b.innerHTML = "<h1>Game Over</h1>";
+        }
+        if (pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y >= 0 && pacmanPos.y + pacmanDirection.y < COL_MAX && (matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] == 'pp' || matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] == 'PP' || matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] == 'ze')) {
             matrix[pacmanPos.x][pacmanPos.y] = 'ze';
             matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
-            matrixCopy[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] = "ghost";
-        }
-        for(var i = 0; i < ROW_MAX; i++)
-        {
-            for(var j = 0; j < COL_MAX; j++)
-                drawLevelParts(matrixCopy[i][j], {x: i, y: j});
+            drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
+            pacmanPos.x += pacmanDirection.x;
+            pacmanPos.y += pacmanDirection.y;
+            matrixCopy[pacmanPos.x][pacmanPos.y] = 'ghost';
+            drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
     }
 
@@ -282,20 +242,28 @@
         var i, j;
 
         var blinkyPos = {x: 15, y: 13};
+        var blinkyMotionDirection = {x: -1, y: 0};
         var pacmanPos = {x: 26, y: 15};
 
-        var matrix = levelGenerator(1);
+        matrix = levelGenerator(1);
         var matrixCopy = levelGenerator(1);
         matrixCopy[pacmanPos.x][pacmanPos.y] = 'ghost';
 
+        for(i = 0; i < ROW_MAX; i++)
+        {
+            for(j = 0; j < COL_MAX; j++) {
+                drawLevelParts(matrixCopy[i][j], {x: i, y: j});
+            }
+        }
+
+
+        pacmanChangeDirection(matrix, pacmanPos, blinkyPos);
         pacmanInterval = setInterval(function() {
-            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, pacmanDirection);
+            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos);
         }, pacmanSpeed);
-        var blinkyMotionDirection = {x: -1, y: 0};
-        var pacmanDirection = {x: -1, y: 0};
         blinkyInterval = setInterval(function() {
             console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
-            blinkyPos = moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection);
+            moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection);
             if(blinkyPos == "gameOver") {
                 clearInterval(pacmanInterval);
                 clearInterval(blinkyInterval);
@@ -303,7 +271,40 @@
             }
         }, blinkySpeed);
     }
-    main();
 
+    function pacmanChangeDirection(matrix, pacmanPos, blinkyPos) {
+        var map = {}; // You could also use an array
+        onkeydown = onkeyup = function(event) {
+            event = event || event; // to deal with IE
+            map[event.keyCode] = event.type == 'keydown';
+            if (map[37] == true || map[38] == true || map[39] == true || map[40] == true) {
+                if(blinkyPos.x == pacmanPos.x && blinkyPos.y == pacmanPos.y) {
+                    clearInterval(pacmanInterval);
+                    clearInterval(blinkyInterval);
+                    b.innerHTML = "<h1>Game Over</h1>";
+                }
+                if (map[38] == true) {
+                    if (pacmanPos.x - 1 >= 0 && pacmanPos.x - 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x - 1][pacmanPos.y] == 'pp' || matrix[pacmanPos.x - 1][pacmanPos.y] == 'PP' || matrix[pacmanPos.x - 1][pacmanPos.y] == 'ze'))
+                        pacmanDirection = {x: -1, y: 0};
+                }
+                if (map[37] == true) {
+                    if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y - 1 >= 0 && pacmanPos.y - 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y - 1] == 'pp' || matrix[pacmanPos.x][pacmanPos.y - 1] == 'PP' || matrix[pacmanPos.x][pacmanPos.y - 1] == 'ze'))
+                        pacmanDirection = {x: 0, y: -1};
+                }
+                if (map[40] == true) {
+                    console.log("left");
+                    if (pacmanPos.x + 1 >= 0 && pacmanPos.x + 1 < ROW_MAX && pacmanPos.y >= 0 && pacmanPos.y < COL_MAX && (matrix[pacmanPos.x + 1][pacmanPos.y] == 'pp' || matrix[pacmanPos.x + 1][pacmanPos.y] == 'PP' || matrix[pacmanPos.x + 1][pacmanPos.y] == 'ze')) {
+                        console.log("down");
+                        pacmanDirection = {x: 1, y: 0};
+                    }
+                }
+                if (map[39] == true) {
+                    if (pacmanPos.x >= 0 && pacmanPos.x < ROW_MAX && pacmanPos.y + 1 >= 0 && pacmanPos.y + 1 < COL_MAX && (matrix[pacmanPos.x][pacmanPos.y + 1] == 'pp' || matrix[pacmanPos.x][pacmanPos.y + 1] == 'PP' || matrix[pacmanPos.x][pacmanPos.y + 1] == 'ze'))
+                        pacmanDirection = {x: 0, y: 1};
+                }
+            }
+        };
+    }
+    main();
 </script>
 </html>
