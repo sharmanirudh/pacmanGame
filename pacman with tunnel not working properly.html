@@ -15,7 +15,6 @@
     ROW_MAX = 31;
     COL_MAX = 28;
     blinkySpeed = 500;
-    inkySpeed = 600;
     pacmanSpeed = 200;
     pacmanDirection = {x: 1, y: 0};
     tunnelStart = {x:14 ,y: 0};
@@ -46,53 +45,6 @@
             for(var i = 0; i < this.items.length; i++)
                 str += "(" + this.items[0].pt.x.toString() + ", " + this.items[0].pt.y.toString() + "), " + this.items[0].dist + "; ";
             return str;
-        }
-    }
-
-    class Ghost {
-        constructor() {
-            name = "";
-            direction = {};
-            position = {};
-            classActive = "";
-            speed = 500;
-        }
-        findPathToPacman() {
-
-        }
-        moveGhost(matrix, matrixCopy, pacmanPos, inkyPos) {
-
-        }
-        setDirection(x, y) {
-            direction.x = x;
-            direction.y = y;
-            if(x === -1 && y === 0)
-                classActive = name + "Up";
-            else if(x === 1 && y === 0)
-                classActive = name + "Down";
-            else if(x === 0 && y === -1)
-                classActive = name + "Left";
-            else if(x === 0 && y === 1)
-                classActive = name + "Right";
-        }
-        setPos(x, y) {
-            position.x = x;
-            position.y = y;
-        }
-        setSpeed(newSpeed) {
-            speed = newSpeed;
-        }
-        getDirection() {
-            return direction;
-        }
-        getPos() {
-            return position;
-        }
-        getClass() {
-            return classActive;
-        }
-        getSpeed() {
-            return speed;
         }
     }
 
@@ -195,13 +147,53 @@
 //
 //                str3 += "<br><br><br><br>";
                 var earlierPoint = temp[temp.length - 1];
-                var l;
+                var correctPathFound = false, l;
                 for(l = temp.length - 2; l >= 0; l--) {
                     if((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
+                        if(temp[l].pt.x === pacmanPos.x && temp[l].pt.y === pacmanPos.y)
+                            correctPathFound = true;
                         pathToPacman.push(temp[l].pt);
                         earlierPoint = temp[l];
 //                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
                     }
+                }//case I: without portal
+                if(correctPathFound === false) {
+                    pathToPacman.length = 0;                   // making the same state of variable which
+                    earlierPoint = temp[temp.length - 1];// was distruebed by unsuccessfull case I loop
+                    for(l = temp.length - 2; l >= 0; l--) {
+                        if (temp[l].pt.x === tunnelStart.x && temp[l].pt.y === tunnelStart.y) {
+                            if(temp[l].pt.x === pacmanPos.x && temp[l].pt.y === pacmanPos.y)
+                                correctPathFound = true;
+                            pathToPacman.push(temp[l].pt);
+                            earlierPoint = temp[l];
+                        }
+                        else if ((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
+                            if(temp[l].pt.x === pacmanPos.x && temp[l].pt.y === pacmanPos.y)
+                                correctPathFound = true;
+                            pathToPacman.push(temp[l].pt);
+                            earlierPoint = temp[l];
+//                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
+                        }
+                    }//case II: with tunnel start portal
+                }
+                else if(correctPathFound === false) {
+                    pathToPacman.length = 0;                   // making the same state of variable which
+                    earlierPoint = temp[temp.length - 1];// was distruebed by unsuccessfull case I loop
+                    for(l = temp.length - 2; l >= 0; l--) {
+                        if (temp[l].pt.x === tunnelEnd.x && temp[l].pt.y === tunnelEnd.y) {
+                            if(temp[l].pt.x === pacmanPos.x && temp[l].pt.y === pacmanPos.y)
+                                correctPathFound = true;
+                            pathToPacman.push(temp[l].pt);
+                            earlierPoint = temp[l];
+                        }
+                        else if ((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
+                            if(temp[l].pt.x === pacmanPos.x && temp[l].pt.y === pacmanPos.y)
+                                correctPathFound = true;
+                            pathToPacman.push(temp[l].pt);
+                            earlierPoint = temp[l];
+//                        str3 += "(" + temp[l].pt.x.toString() + ", " + temp[l].pt.y.toString() + "), " + temp[l].dist + "; ";
+                        }
+                    }//case III: with tunnel end portal
                 }
 //                b.innerHTML += str3;
                 pathToPacman = pathToPacman.reverse();
@@ -225,6 +217,20 @@
                     continue;
                 var row = pt.x + rowNum[i];
                 var col = pt.y + colNum[i];
+                if(pt.x === tunnelEnd.x && pt.y === tunnelEnd.y && i === 2 && visited[tunnelStart.x][tunnelStart.y] === 0) {
+                    row = tunnelStart.x;
+                    col = tunnelStart.y;
+                    visited[row][col] = 1;
+                    var adjCell = {pt: {x: row, y: col}, dist: curr.dist + 1};
+                    q.enqueue(adjCell);
+                }
+                if(pt.x === 14 && pt.y === 0 && i === 1 && visited[tunnelEnd.x][tunnelEnd.y] === 0) {
+                    row = tunnelEnd.x;
+                    col = tunnelEnd.y;
+                    visited[row][col] = 1;
+                    var adjCell = {pt: {x: row, y: col}, dist: curr.dist + 1};
+                    q.enqueue(adjCell);
+                }
                 // if adjacent cell is valid, has path and
                 // not visited yet, enqueue it.
                 if (isValid(row, col) === true && (matrix[row][col] === 'pp' || matrix[row][col] === 'PP' || matrix[row][col] === 'H8' || matrix[row][col] === 'ze') && visited[row][col] === 0)
@@ -234,24 +240,40 @@
                     var adjCell = {pt: {x: row, y: col}, dist: curr.dist + 1};
                     q.enqueue(adjCell);
                 }
+//                else if ((row === tunnelStart.x && col === tunnelStart.y - 1 && visited[tunnelEnd.x][tunnelEnd.y] === 0) || (row === tunnelEnd.x && col === tunnelEnd.y + 1 && visited[tunnelStart.x][tunnelStart.y] === 0)) {
+//                    console.log(row);
+//                    console.log(col);
+//                    console.log(q);
+//                    if (row === tunnelStart.x && col === tunnelStart.y - 1) {
+//                        row = tunnelEnd.x;
+//                        col = tunnelEnd.y;
+//                    }
+//                    else if (row === tunnelEnd.x && col === tunnelEnd.y + 1) {
+//                        row = tunnelStart.x;
+//                        col = tunnelStart.y;
+//                    }
+//                    visited[row][col] = 1;
+//                    var adjCell = {pt: {x: row, y: col}, dist: curr.dist + 1};
+//                    q.enqueue(adjCell);
+//                    console.log(q);
+//                }
             }
         }
 
         return -1;// if destination cannot be reached
     }
 
-    function moveBlinky(matrix, matrixCopy, currentPos, pacmanPos, blinkyMotionDirection, inkyPos) {
-        if((currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
+    function moveBlinky(matrix, matrixCopy, currentPos, pacmanPos, blinkyMotionDirection) {
+        if(currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) {
             clearInterval(pacmanInterval);
             clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
             b.innerHTML = "<h1>Game Over</h1>";
         }
         var pathToPacman = [];
-        findPath(matrix, currentPos, pacmanPos, pathToPacman, blinkyMotionDirection, inkyPos);
+        findPath(matrix, currentPos, pacmanPos, pathToPacman, blinkyMotionDirection);
         console.log(pathToPacman, currentPos);
         matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
-        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'blinky';
+        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'ghost';
         drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
         drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
 
@@ -266,37 +288,10 @@
 
     }
 
-    function moveInky(matrix, matrixCopy, currentPos, pacmanPos, inkyMotionDirection, inkyPos) {
-        if((currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
+    function movePacman(matrix, matrixCopy, pacmanPos, blinkyPos) {
+        if(blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) {
             clearInterval(pacmanInterval);
             clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
-            b.innerHTML = "<h1>Game Over</h1>";
-        }
-        var pathToPacman = [];
-        findPath(matrix, currentPos, pacmanPos, pathToPacman, inkyMotionDirection);
-        console.log(pathToPacman, currentPos);
-        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
-        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'inky';
-        drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
-        drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
-
-        inkyMotionDirection.x = pathToPacman[1].x - pathToPacman[0].x;
-        // blinkyMotionDirection.y equals 1 => going right, blinkyMotionDirection.y equals -1 => going left, blinkyMotionDirection.y equals 0 => no change in 'y' direction
-        inkyMotionDirection.y = pathToPacman[1].y - pathToPacman[0].y;
-
-        if(pathToPacman.length === 1)
-            return "gameOver";
-        currentPos.x = pathToPacman[1].x;
-        currentPos.y = pathToPacman[1].y;
-
-    }
-
-    function movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, inkyPos) {
-        if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
-            clearInterval(pacmanInterval);
-            clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
             b.innerHTML = "<h1>Game Over</h1>";
         }
         if(pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y === -1) {
@@ -340,11 +335,9 @@
     function main() {
         var i, j;
 
-        var blinkyPos = {x: 15, y: 3};//15, 13
+        var blinkyPos = {x: 14, y: 7};//15, 13
         var blinkyMotionDirection = {x: -1, y: 0};
-        var inkyPos = {x: 15, y: 5};//15, 13
-        var inkyMotionDirection = {x: 1, y: 0};
-        var pacmanPos = {x: 26, y: 15};//26, 15
+        var pacmanPos = {x: 14, y: 20};//26, 15
 
         matrix = levelGenerator(1);
         var matrixCopy = levelGenerator(1);
@@ -358,42 +351,30 @@
         }
 
 
-        pacmanChangeDirection(matrix, pacmanPos, blinkyPos, inkyPos);
+        pacmanChangeDirection(matrix, pacmanPos, blinkyPos);
         pacmanInterval = setInterval(function() {
-            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, inkyPos);
+            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos);
         }, pacmanSpeed);
         blinkyInterval = setInterval(function() {
 //            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
-            moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection, inkyPos);
+            moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection);
             if(blinkyPos === "gameOver") {
                 clearInterval(pacmanInterval);
                 clearInterval(blinkyInterval);
-                clearInterval(inkyInterval);
-                b.innerHTML = "<h1>Game Over</h1>";
-            }
-        }, blinkySpeed);
-        inkyInterval = setInterval(function() {
-//            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
-            moveInky(matrix, matrixCopy, inkyPos, pacmanPos, inkyMotionDirection, blinkyPos);
-            if(inkyPos === "gameOver") {
-                clearInterval(pacmanInterval);
-                clearInterval(blinkyInterval);
-                clearInterval(inkyInterval);
                 b.innerHTML = "<h1>Game Over</h1>";
             }
         }, blinkySpeed);
     }
 
-    function pacmanChangeDirection(matrix, pacmanPos, blinkyPos, inkyPos) {
+    function pacmanChangeDirection(matrix, pacmanPos, blinkyPos) {
         var map = {}; // You could also use an array
         onkeydown = onkeyup = function(event) {
             event = event || event; // to deal with IE
             map[event.keyCode] = event.type === 'keydown';
             if (map[37] === true || map[38] === true || map[39] === true || map[40] === true) {
-                if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
+                if(blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) {
                     clearInterval(pacmanInterval);
                     clearInterval(blinkyInterval);
-                    clearInterval(inkyInterval);
                     b.innerHTML = "<h1>Game Over</h1>";
                 }
                 if (map[38] === true) {

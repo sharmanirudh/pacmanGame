@@ -14,12 +14,12 @@
     b = document.getElementsByTagName("body")[0];
     ROW_MAX = 31;
     COL_MAX = 28;
-    blinkySpeed = 500;
-    inkySpeed = 600;
-    pacmanSpeed = 200;
+    pacmanSpeed = 160;
     pacmanDirection = {x: 1, y: 0};
     tunnelStart = {x:14 ,y: 0};
     tunnelEnd = {x:14 ,y: 27};
+    window.pacmanMouthAngle = 360;
+
 
     class Queue {
         constructor() {
@@ -51,50 +51,72 @@
 
     class Ghost {
         constructor() {
-            name = "";
-            direction = {};
-            position = {};
-            classActive = "";
-            speed = 500;
+            this.name = "";
+            this.direction = {};
+            this.position = {};
+            this.classActive = "";
+            this.speed = 500;
         }
         findPathToPacman() {
 
         }
-        moveGhost(matrix, matrixCopy, pacmanPos, inkyPos) {
+        move(matrix, matrixCopy, pacmanPos/*, ghost2, ghost3, ghost4*/) {
+            if((this.position.x === pacmanPos.x && this.position.y === pacmanPos.y)/* || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)*/) {
+                clearInterval(pacmanInterval);
+                clearInterval(blinkyInterval);
+//                clearInterval(inkyInterval);
+                b.innerHTML = "<h1>Game Over</h1>";
+            }
+            var pathToPacman = [];
+            findPath(matrix, this.position, pacmanPos, pathToPacman, this.direction/*, inkyPos*/);
+            // direction.y equals 1 => going right, direction.y equals -1 => going left, direction.y equals 0 => no change in 'y' direction
+            this.setDirection(pathToPacman[1].x - pathToPacman[0].x, pathToPacman[1].y - pathToPacman[0].y);
+            matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
+            matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = this.classActive;
+            drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
+            drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
 
+            if(pathToPacman.length === 1)
+                return "gameOver";
+            this.position.x = pathToPacman[1].x;
+            this.position.y = pathToPacman[1].y;
         }
         setDirection(x, y) {
-            direction.x = x;
-            direction.y = y;
+            this.direction.x = x;
+            this.direction.y = y;
             if(x === -1 && y === 0)
-                classActive = name + "Up";
+                this.classActive = this.name + "Up1";
             else if(x === 1 && y === 0)
-                classActive = name + "Down";
+                this.classActive = this.name + "Down1";
             else if(x === 0 && y === -1)
-                classActive = name + "Left";
+                this.classActive = this.name + "Left1";
             else if(x === 0 && y === 1)
-                classActive = name + "Right";
+                this.classActive = this.name + "Right1";
         }
         setPos(x, y) {
-            position.x = x;
-            position.y = y;
+            this.position.x = x;
+            this.position.y = y;
         }
-        setSpeed(newSpeed) {
-            speed = newSpeed;
+        setSpeed(speed) {
+            this.speed = speed;
+        }
+        setName(name) {
+            this.name = name;
         }
         getDirection() {
-            return direction;
+            return this.direction;
         }
         getPos() {
-            return position;
+            return this.position;
         }
         getClass() {
-            return classActive;
+            return this.classActive;
         }
         getSpeed() {
-            return speed;
+            return this.speed;
         }
     }
+
 
     function levelGenerator(level) {
         if(level === 1) {
@@ -195,7 +217,7 @@
 //
 //                str3 += "<br><br><br><br>";
                 var earlierPoint = temp[temp.length - 1];
-                var l;
+                var correctPathFound = false, l;
                 for(l = temp.length - 2; l >= 0; l--) {
                     if((temp[l].pt.x === earlierPoint.pt.x && Math.abs(temp[l].pt.y - earlierPoint.pt.y) === 1) || (temp[l].pt.y === earlierPoint.pt.y && Math.abs(temp[l].pt.x - earlierPoint.pt.x) === 1)) {
                         pathToPacman.push(temp[l].pt);
@@ -240,63 +262,11 @@
         return -1;// if destination cannot be reached
     }
 
-    function moveBlinky(matrix, matrixCopy, currentPos, pacmanPos, blinkyMotionDirection, inkyPos) {
-        if((currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
-            clearInterval(pacmanInterval);
-            clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
-            b.innerHTML = "<h1>Game Over</h1>";
-        }
-        var pathToPacman = [];
-        findPath(matrix, currentPos, pacmanPos, pathToPacman, blinkyMotionDirection, inkyPos);
-        console.log(pathToPacman, currentPos);
-        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
-        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'blinky';
-        drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
-        drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
-
-        blinkyMotionDirection.x = pathToPacman[1].x - pathToPacman[0].x;
-        // blinkyMotionDirection.y equals 1 => going right, blinkyMotionDirection.y equals -1 => going left, blinkyMotionDirection.y equals 0 => no change in 'y' direction
-        blinkyMotionDirection.y = pathToPacman[1].y - pathToPacman[0].y;
-
-        if(pathToPacman.length === 1)
-            return "gameOver";
-        currentPos.x = pathToPacman[1].x;
-        currentPos.y = pathToPacman[1].y;
-
-    }
-
-    function moveInky(matrix, matrixCopy, currentPos, pacmanPos, inkyMotionDirection, inkyPos) {
-        if((currentPos.x === pacmanPos.x && currentPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
-            clearInterval(pacmanInterval);
-            clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
-            b.innerHTML = "<h1>Game Over</h1>";
-        }
-        var pathToPacman = [];
-        findPath(matrix, currentPos, pacmanPos, pathToPacman, inkyMotionDirection);
-        console.log(pathToPacman, currentPos);
-        matrixCopy[pathToPacman[0].x][pathToPacman[0].y] = matrix[pathToPacman[0].x][pathToPacman[0].y];
-        matrixCopy[pathToPacman[1].x][pathToPacman[1].y] = 'inky';
-        drawLevelParts(matrixCopy[pathToPacman[0].x][pathToPacman[0].y], {x: pathToPacman[0].x, y: pathToPacman[0].y});
-        drawLevelParts(matrixCopy[pathToPacman[1].x][pathToPacman[1].y], {x: pathToPacman[1].x, y: pathToPacman[1].y});
-
-        inkyMotionDirection.x = pathToPacman[1].x - pathToPacman[0].x;
-        // blinkyMotionDirection.y equals 1 => going right, blinkyMotionDirection.y equals -1 => going left, blinkyMotionDirection.y equals 0 => no change in 'y' direction
-        inkyMotionDirection.y = pathToPacman[1].y - pathToPacman[0].y;
-
-        if(pathToPacman.length === 1)
-            return "gameOver";
-        currentPos.x = pathToPacman[1].x;
-        currentPos.y = pathToPacman[1].y;
-
-    }
-
     function movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, inkyPos) {
-        if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
+        if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y)/* || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)*/) {
             clearInterval(pacmanInterval);
             clearInterval(blinkyInterval);
-            clearInterval(inkyInterval);
+//            clearInterval(inkyInterval);
             b.innerHTML = "<h1>Game Over</h1>";
         }
         if(pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y === -1) {
@@ -304,7 +274,7 @@
             matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
             pacmanPos.y = COL_MAX-1;
-            matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacman';
+//            matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacmanLeft';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
         else if(pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y === COL_MAX) {
@@ -312,7 +282,7 @@
             matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
             pacmanPos.y = 0;
-            matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacman';
+//            matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacmanRight';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
         else if (pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y >= 0 && pacmanPos.y + pacmanDirection.y < COL_MAX && (matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] === 'pp' || matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] === 'PP' || matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y] === 'ze')) {
@@ -321,7 +291,14 @@
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
             pacmanPos.x += pacmanDirection.x;
             pacmanPos.y += pacmanDirection.y;
-            matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacman';
+//            if(pacmanDirection.x === -1 && pacmanDirection.y === 0)
+//                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanUp315";
+//            else if(pacmanDirection.x === 1 && pacmanDirection.y === 0)
+//                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanDown315";
+//            else if(pacmanDirection.x === 0 && pacmanDirection.y === -1)
+//                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanLeft315";
+//            else if(pacmanDirection.x === 0 && pacmanDirection.y === 1)
+//                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanRight315";
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
     }
@@ -340,10 +317,19 @@
     function main() {
         var i, j;
 
-        var blinkyPos = {x: 15, y: 3};//15, 13
-        var blinkyMotionDirection = {x: -1, y: 0};
-        var inkyPos = {x: 15, y: 5};//15, 13
-        var inkyMotionDirection = {x: 1, y: 0};
+        var blinky = new Ghost();
+        blinky.setName("blinky");
+        blinky.setPos(15, 13);
+        blinky.setDirection(-1, 0);
+        blinky.setSpeed(300);
+
+        var inky = new Ghost();
+        inky.setName("inky");
+        inky.setPos(15, 14);
+        inky.setDirection(1, 0);
+        inky.setSpeed(300);
+//        var inkyPos = {x: 15, y: 15};//15, 13
+//        var inkyMotionDirection = {x: 1, y: 0};
         var pacmanPos = {x: 26, y: 15};//26, 15
 
         matrix = levelGenerator(1);
@@ -357,31 +343,59 @@
             }
         }
 
+        var blinkyPos = blinky.getPos();
+        var inkyPos = inky.getPos();
 
-        pacmanChangeDirection(matrix, pacmanPos, blinkyPos, inkyPos);
+        pacmanChangeDirection(matrix, pacmanPos, blinky.getPos()/*, inkyPos*/);
+        window.angleDiff = 45;
         pacmanInterval = setInterval(function() {
-            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos, inkyPos);
+            movePacman(matrix, matrixCopy, pacmanPos, blinkyPos);
+            if (pacmanMouthAngle >= 360)
+                angleDiff = -45;
+            else if (pacmanMouthAngle <= 270)
+                angleDiff = 45;
+            pacmanMouthAngle = pacmanMouthAngle + angleDiff;
+            if (pacmanDirection.x === -1 && pacmanDirection.y === 0)
+                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanUp" + pacmanMouthAngle;
+            else if (pacmanDirection.x === 1 && pacmanDirection.y === 0)
+                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanDown" + pacmanMouthAngle;
+            else if (pacmanDirection.x === 0 && pacmanDirection.y === -1)
+                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanLeft" + pacmanMouthAngle;
+            else if (pacmanDirection.x === 0 && pacmanDirection.y === 1)
+                matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanRight" + pacmanMouthAngle;
+            drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }, pacmanSpeed);
+
+
         blinkyInterval = setInterval(function() {
-//            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
-            moveBlinky(matrix, matrixCopy, blinkyPos, pacmanPos, blinkyMotionDirection, inkyPos);
+            blinky.move(matrix, matrixCopy, pacmanPos);
             if(blinkyPos === "gameOver") {
                 clearInterval(pacmanInterval);
                 clearInterval(blinkyInterval);
                 clearInterval(inkyInterval);
                 b.innerHTML = "<h1>Game Over</h1>";
             }
-        }, blinkySpeed);
+        }, blinky.getSpeed());
+
         inkyInterval = setInterval(function() {
-//            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
-            moveInky(matrix, matrixCopy, inkyPos, pacmanPos, inkyMotionDirection, blinkyPos);
+            inky.move(matrix, matrixCopy, {x: pacmanPos.x + 4*pacmanDirection.x, y: pacmanPos.y + 4*pacmanDirection.y});
             if(inkyPos === "gameOver") {
                 clearInterval(pacmanInterval);
                 clearInterval(blinkyInterval);
                 clearInterval(inkyInterval);
                 b.innerHTML = "<h1>Game Over</h1>";
             }
-        }, blinkySpeed);
+        }, inky.getSpeed());
+//        inkyInterval = setInterval(function() {
+////            console.log(blinkyMotionDirection.x, " && ", blinkyMotionDirection.y);
+//            moveInky(matrix, matrixCopy, inkyPos, pacmanPos, inkyMotionDirection, blinkyPos);
+//            if(inkyPos === "gameOver") {
+//                clearInterval(pacmanInterval);
+//                clearInterval(blinkyInterval);
+//                clearInterval(inkyInterval);
+//                b.innerHTML = "<h1>Game Over</h1>";
+//            }
+//        }, blinkySpeed);
     }
 
     function pacmanChangeDirection(matrix, pacmanPos, blinkyPos, inkyPos) {
@@ -390,10 +404,10 @@
             event = event || event; // to deal with IE
             map[event.keyCode] = event.type === 'keydown';
             if (map[37] === true || map[38] === true || map[39] === true || map[40] === true) {
-                if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y) || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)) {
+                if((blinkyPos.x === pacmanPos.x && blinkyPos.y === pacmanPos.y)/* || (inkyPos.x === pacmanPos.x && inkyPos.y === pacmanPos.y)*/) {
                     clearInterval(pacmanInterval);
                     clearInterval(blinkyInterval);
-                    clearInterval(inkyInterval);
+//                    clearInterval(inkyInterval);
                     b.innerHTML = "<h1>Game Over</h1>";
                 }
                 if (map[38] === true) {
