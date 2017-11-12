@@ -10,34 +10,6 @@
 
 <script type="text/javascript">
 
-    class Queue {
-        constructor() {
-            this.items = [];
-        }
-        isEmpty() {
-            return this.items.length === 0;
-        }
-        enqueue(elements) {
-            this.items.push(elements);
-        }
-        dequeue() {
-            if (this.isEmpty())
-                return "Underflow";
-            return this.items.shift();
-        }
-        front() {
-            if (this.isEmpty())
-                return "No elements in Queue";
-            return this.items[0];
-        }
-        printQueue() {
-            var str = "";
-            for(var i = 0; i < this.items.length; i++)
-                str += "(" + this.items[0].pt.x.toString() + ", " + this.items[0].pt.y.toString() + "), " + this.items[0].dist + "; ";
-            return str;
-        }
-    }
-
     class Ghost {
         constructor() {
             this.name = "";
@@ -45,16 +17,23 @@
             this.position = {};
             this.classActive = "";
             this.speed = 400;
+            this.isEatenByPacman = false;
         }
         move(matrix, matrixCopy, pacmanPos, targetPos, ghost1, ghost2, ghost3) {
-            if (isGameOver(pacmanPos, this, ghost1, ghost2, ghost3) === true) {
+            if (isGameOver(pacmanPos, this, ghost1, ghost2, ghost3) && (window.panicMode === false)) {
                 clearInterval(window.pacmanInterval);
                 clearInterval(window.blinkyInterval);
                 clearInterval(window.inkyInterval);
                 clearInterval(window.pinkyInterval);
                 clearInterval(window.clydeInterval);
+                clearInterval(window.scatterInterval);
+                clearInterval(window.chaseInterval);
                 b.innerHTML = "<h1>Game Over</h1>";
             }
+            else if (window.panicMode === true && this.isEatenByPacman === false)
+                this.isEatenByPacman = ((this.position.x === pacmanPos.x && this.position.y === pacmanPos.y) || this.isEatenByPacman);
+            console.log(this.isEatenByPacman);
+
             var i, adjPosArray = [], adjPos = {}, rowNum = [-1, 0, 0, 1], colNum = [0, -1, 1, 0];
             for (i = 0; i < 4; i++) {
                 if (this.direction.x === -1 * rowNum[i] && this.direction.y === -1 * colNum[i])
@@ -123,20 +102,44 @@
                 drawLevelParts(matrixCopy[this.position.x][this.position.y], {x: this.position.x, y: this.position.y});
                 drawLevelParts(matrixCopy[newPos.x][newPos.y], {x: newPos.x, y: newPos.y});
                 this.position = newPos;
-                console.log(this.position, this.direction);
             }
         }
         setDirection(x, y) {
             this.direction.x = x;
             this.direction.y = y;
-            if (x === -1 && y === 0)
-                this.classActive = this.name + "Up1";
-            else if (x === 1 && y === 0)
-                this.classActive = this.name + "Down1";
-            else if (x === 0 && y === -1)
-                this.classActive = this.name + "Left1";
-            else if (x === 0 && y === 1)
-                this.classActive = this.name + "Right1";
+            if (window.panicMode === false) {
+                if (x === -1 && y === 0)
+                    this.classActive = this.name + "Up" + (1.5 + window.alternateGhostAnimate).toString();
+                else if (x === 1 && y === 0)
+                    this.classActive = this.name + "Down" + (1.5 + window.alternateGhostAnimate).toString();
+                else if (x === 0 && y === -1)
+                    this.classActive = this.name + "Left" + (1.5 + window.alternateGhostAnimate).toString();
+                else if (x === 0 && y === 1)
+                    this.classActive = this.name + "Right" + (1.5 + window.alternateGhostAnimate).toString();
+            }
+            else if (window.panicMode === true) {
+                if (this.isEatenByPacman === false) {
+                    if (x === -1 && y === 0)
+                        this.classActive = "ghostBlue" + (1.5 + window.alternateGhostAnimate).toString();
+                    else if (x === 1 && y === 0)
+                        this.classActive = "ghostBlue" + (1.5 + window.alternateGhostAnimate).toString();
+                    else if (x === 0 && y === -1)
+                        this.classActive = "ghostBlue" + (1.5 + window.alternateGhostAnimate).toString();
+                    else if (x === 0 && y === 1)
+                        this.classActive = "ghostBlue" + (1.5 + window.alternateGhostAnimate).toString();
+                }
+                else if (this.isEatenByPacman === true) {
+                    if (x === -1 && y === 0)
+                        this.classActive = "eyesUp";
+                    else if (x === 1 && y === 0)
+                        this.classActive = "eyesDown";
+                    else if (x === 0 && y === -1)
+                        this.classActive = "eyesLeft";
+                    else if (x === 0 && y === 1)
+                        this.classActive = "eyesRight";
+                }
+                window.alternateGhostAnimate =  window.alternateGhostAnimate * -1;
+            }
         }
         setPos(x, y) {
             this.position.x = x;
@@ -150,6 +153,12 @@
         }
         setClass(classActive) {
             this.classActive = classActive;
+        }
+        setIsEatenByPacman(booleanAnswer) {
+            this.isEatenByPacman = (booleanAnswer === true);
+        }
+        getIsEatenByPacman() {
+            return this.isEatenByPacman;
         }
         getDirection() {
             return this.direction;
@@ -209,6 +218,16 @@
     clydeLeftHouse = false;
     clydeInterval = null;
 
+    panicMode = false;// run from pacman
+    panicColour = "White";
+    panicModeGettingOver = false;
+    chaseMode = false;// chase pacman
+    chaseModeDuration = 20000;
+    chaseInterval = null;
+    scatterMode = true;// loop around their corners
+    scatterModeDuration = 7000;
+    scatterInterval = null;
+    numberOfPillsLeft = 0;
     alternateGhostAnimate = 0.5;
 
     function levelGenerator(level) {
@@ -262,13 +281,21 @@
     }
 
     function movePacman(matrix, matrixCopy, pacmanPos, blinky, pinky, inky, clyde) {
-        if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) === true) {
+        if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) && (window.panicMode === false)) {
             clearInterval(window.pacmanInterval);
             clearInterval(window.blinkyInterval);
             clearInterval(window.inkyInterval);
             clearInterval(window.pinkyInterval);
             clearInterval(window.clydeInterval);
+            clearInterval(window.scatterInterval);
+            clearInterval(window.chaseInterval);
             b.innerHTML = "<h1>Game Over</h1>";
+        }
+        else if (window.panicMode === true) {
+            blinky.setIsEatenByPacman((blinky.getPos().x === pacmanPos.x && blinky.getPos().y === pacmanPos.y) || blinky.isEatenByPacman);
+            pinky.setIsEatenByPacman((pinky.getPos().x === pacmanPos.x && pinky.getPos().y === pacmanPos.y) || pinky.isEatenByPacman);
+            inky.setIsEatenByPacman((inky.getPos().x === pacmanPos.x && inky.getPos().y === pacmanPos.y) || inky.isEatenByPacman);
+            clyde.setIsEatenByPacman((clyde.getPos().x === pacmanPos.x && clyde.getPos().y === pacmanPos.y) || clyde.isEatenByPacman);
         }
         if (pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y === -1) {
             matrix[pacmanPos.x][pacmanPos.y] = 'ze';
@@ -285,6 +312,18 @@
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
         else if (pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y >= 0 && pacmanPos.y + pacmanDirection.y < COL_MAX && isValidClass(matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y])) {
+            if (matrix[pacmanPos.x][pacmanPos.y] === "PP") {
+                window.panicMode = true;
+
+                window.setTimeout(function() {
+                    window.panicMode = false;
+                    window.panicModeGettingOver = false;
+                }, 30000);
+
+                window.setTimeout(function() {
+                    window.panicModeGettingOver = true;
+                }, 27000);
+            }
             matrix[pacmanPos.x][pacmanPos.y] = 'ze';
             matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
@@ -292,6 +331,7 @@
             pacmanPos.y += pacmanDirection.y;
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
         }
+
     }
 
     function drawLevelParts(classAtPos, pos) {
@@ -314,14 +354,14 @@
         var matrixCopy = levelGenerator(1);
         matrixCopy[pacmanPos.x][pacmanPos.y] = 'pacmanUp360';
 
-        for(i = 0; i < ROW_MAX; i++)
-        {
+        for(i = 0; i < ROW_MAX; i++) {
             for(j = 0; j < COL_MAX; j++) {
                 drawLevelParts(matrixCopy[i][j], {x: i, y: j});
             }
         }
 
         pacmanChangeDirection(matrix, pacmanPos, blinky, pinky, inky, clyde);
+
         window.pacmanInterval = setInterval(function() {
             movePacman(matrix, matrixCopy, pacmanPos, blinky, pinky, inky, clyde);
             if (window.pacmanMouthAngle >= 360)
@@ -338,10 +378,11 @@
             else if (pacmanDirection.x === 0 && pacmanDirection.y === 1)
                 matrixCopy[pacmanPos.x][pacmanPos.y] = "pacmanRight" + window.pacmanMouthAngle;
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
-            blinky.setClass(blinky.getClass().slice(0, -1) + (1.5 + alternateGhostAnimate).toString());
-            pinky.setClass(pinky.getClass().slice(0, -1) + (1.5 + alternateGhostAnimate).toString());
-            inky.setClass(inky.getClass().slice(0, -1) + (1.5 + alternateGhostAnimate).toString());
-            clyde.setClass(clyde.getClass().slice(0, -1) + (1.5 + alternateGhostAnimate).toString());
+
+            blinky.setClass(blinky.getClass().slice(0, -1) + (1.5 + window.alternateGhostAnimate).toString());
+            pinky.setClass(pinky.getClass().slice(0, -1) + (1.5 + window.alternateGhostAnimate).toString());
+            inky.setClass(inky.getClass().slice(0, -1) + (1.5 + window.alternateGhostAnimate).toString());
+            clyde.setClass(clyde.getClass().slice(0, -1) + (1.5 + window.alternateGhostAnimate).toString());
             matrixCopy[blinky.getPos().x][blinky.getPos().y] = blinky.getClass();
             matrixCopy[pinky.getPos().x][pinky.getPos().y] = pinky.getClass();
             matrixCopy[inky.getPos().x][inky.getPos().y] = inky.getClass();
@@ -350,57 +391,138 @@
             drawLevelParts(matrixCopy[pinky.getPos().x][pinky.getPos().y], pinky.getPos());
             drawLevelParts(matrixCopy[inky.getPos().x][inky.getPos().y], inky.getPos());
             drawLevelParts(matrixCopy[clyde.getPos().x][clyde.getPos().y], clyde.getPos());
-            alternateGhostAnimate =  alternateGhostAnimate * -1;
+            if (panicMode === true) {
+                if (window.panicModeGettingOver === true) {
+                    blinky.setClass("ghost" + window.panicColour + (1.5 + window.alternateGhostAnimate).toString());
+                    pinky.setClass("ghost" + window.panicColour + (1.5 + window.alternateGhostAnimate).toString());
+                    inky.setClass("ghost" + window.panicColour + (1.5 + window.alternateGhostAnimate).toString());
+                    clyde.setClass("ghost" + window.panicColour + (1.5 + window.alternateGhostAnimate).toString());
+                    window.panicColour = (window.panicColour === "White") ? "Blue" : "White";
+                } else {
+                    blinky.setClass("ghostBlue" + (1.5 + window.alternateGhostAnimate).toString());
+                    pinky.setClass("ghostBlue" + (1.5 + window.alternateGhostAnimate).toString());
+                    inky.setClass("ghostBlue" + (1.5 + window.alternateGhostAnimate).toString());
+                    clyde.setClass("ghostBlue" + (1.5 + window.alternateGhostAnimate).toString());
+                }
+
+                if (blinky.isEatenByPacman === true)
+                    blinky.setDirection(blinky.getDirection().x, blinky.getDirection().y);// will automatically set appropriate eyes direction
+                if (pinky.isEatenByPacman === true)
+                    pinky.setDirection(pinky.getDirection().x, pinky.getDirection().y);
+                if (inky.isEatenByPacman === true)
+                    inky.setDirection(inky.getDirection().x, inky.getDirection().y);
+                if (clyde.isEatenByPacman === true)
+                    clyde.setDirection(clyde.getDirection().x, clyde.getDirection().y);
+
+                matrixCopy[blinky.getPos().x][blinky.getPos().y] = blinky.getClass();
+                matrixCopy[pinky.getPos().x][pinky.getPos().y] = pinky.getClass();
+                matrixCopy[inky.getPos().x][inky.getPos().y] = inky.getClass();
+                matrixCopy[clyde.getPos().x][clyde.getPos().y] = clyde.getClass();
+                drawLevelParts(matrixCopy[blinky.getPos().x][blinky.getPos().y], blinky.getPos());
+                drawLevelParts(matrixCopy[pinky.getPos().x][pinky.getPos().y], pinky.getPos());
+                drawLevelParts(matrixCopy[inky.getPos().x][inky.getPos().y], inky.getPos());
+                drawLevelParts(matrixCopy[clyde.getPos().x][clyde.getPos().y], clyde.getPos());
+            }
+            window.alternateGhostAnimate =  window.alternateGhostAnimate * -1;
         }, pacmanSpeed);
 
 
         window.blinkyInterval = setInterval(function() {
-            if (blinkyLeftHouse === true)
+            if (blinky.getIsEatenByPacman() === true && window.panicMode === true)
+                blinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 12}, inky, pinky, clyde);
+            else if (blinkyLeftHouse === true && window.chaseMode === true)
                 blinky.move(matrix, matrixCopy, pacmanPos, pacmanPos, inky, pinky, clyde);
             else if (blinkyLeftHouse === false)
                 blinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, pinky, clyde);
+            else if (window.scatterMode === true)
+                blinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: 28}, inky, pinky, clyde);
+
             var blinkyPos = blinky.getPos();
             if (blinkyPos.x === 11 && blinkyPos.y === 14)
                 window.blinkyLeftHouse = true;
-            else if (blinkyPos.x >= 12 && blinkyPos.x <= 16 && blinkyPos.y >= 10 && blinkyPos.y <= 17)
+            else if (blinkyPos.x >= 12 && blinkyPos.x <= 16 && blinkyPos.y >= 10 && blinkyPos.y <= 17) {
+                blinky.setIsEatenByPacman(false);
                 window.blinkyLeftHouse = false;
+            }
         }, blinky.getSpeed());
 
         window.inkyInterval = setInterval(function() {
-            if (inkyLeftHouse === true)
+            if (inky.getIsEatenByPacman() === true && window.panicMode === true)
+                inky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 13}, blinky, pinky, clyde);
+            else if (inkyLeftHouse === true && window.chaseMode === true)
                 inky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x + 4*pacmanDirection.x, y: pacmanPos.y + 4*pacmanDirection.y}, blinky, pinky, clyde);
             else if (inkyLeftHouse === false)
                 inky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, blinky, pinky, clyde);
+            else if (window.scatterMode === true)
+                inky.move(matrix, matrixCopy, pacmanPos, {x: 31, y: 28}, blinky, pinky, clyde);
+
             var inkyPos = inky.getPos();
             if (inkyPos.x === 11 && inkyPos.y === 14)
                 window.inkyLeftHouse = true;
-            else if (inkyPos.x >= 12 && inkyPos.x <= 16 && inkyPos.y >= 10 && inkyPos.y <= 17)
+            else if (inkyPos.x >= 12 && inkyPos.x <= 16 && inkyPos.y >= 10 && inkyPos.y <= 17) {
+                inky.setIsEatenByPacman(false);
                 window.inkyLeftHouse = false;
+            }
         }, inky.getSpeed());
 
         window.pinkyInterval = setInterval(function() {
-            if (pinkyLeftHouse === true)
+            if (pinky.getIsEatenByPacman() === true && window.panicMode === true)
+                pinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 14}, inky, blinky, clyde);
+            else if (pinkyLeftHouse === true && window.chaseMode === true)
                 pinky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, clyde);
             else if (pinkyLeftHouse === false)
                 pinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, blinky, clyde);
+            else if (window.scatterMode === true)
+                pinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: -1}, inky, blinky, clyde);
+
             var pinkyPos = pinky.getPos();
             if (pinkyPos.x === 11 && pinkyPos.y === 14)
                 window.pinkyLeftHouse = true;
-            else if (pinkyPos.x >= 12 && pinkyPos.x <= 16 && pinkyPos.y >= 10 && pinkyPos.y <= 17)
+            else if (pinkyPos.x >= 12 && pinkyPos.x <= 16 && pinkyPos.y >= 10 && pinkyPos.y <= 17) {
+                pinky.setIsEatenByPacman(false);
                 window.pinkyLeftHouse = false;
+            }
         }, pinky.getSpeed());
 
         window.clydeInterval = setInterval(function() {
-            if (clydeLeftHouse === true)
-                clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, pinky);
+            if (clyde.getIsEatenByPacman() === true && window.panicMode === true)
+                clyde.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 15}, inky, blinky, pinky);
+            else if (clydeLeftHouse === true && window.chaseMode === true) {
+                if((clyde.getPos().x > pacmanPos.x + 4 || clyde.getPos().x < pacmanPos.x - 4) && (clyde.getPos().y > pacmanPos.y + 4 || clyde.getPos().y < pacmanPos.y - 4))
+                    clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, pinky);
+                else
+                    clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 12*pacmanDirection.x, y: pacmanPos.y - 12*pacmanDirection.y}, inky, blinky, pinky);
+            }
             else if (clydeLeftHouse === false)
-                clyde.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, blinky, pinky);
+                clyde.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 13}, inky, blinky, pinky);
+            else if (window.scatterMode === true)
+                clyde.move(matrix, matrixCopy, pacmanPos, {x: 31, y: -1}, inky, blinky, pinky);
+
             var clydePos = clyde.getPos();
-            if (clydePos.x === 11 && clydePos.y === 14)
+            if (clydePos.x === 11 && clydePos.y === 13)
                 window.clydeLeftHouse = true;
-            else if (clydePos.x >= 12 && clydePos.x <= 16 && clydePos.y >= 10 && clydePos.y <= 17)
+            else if (clydePos.x >= 12 && clydePos.x <= 16 && clydePos.y >= 10 && clydePos.y <= 17) {
+                clyde.setIsEatenByPacman(false);
                 window.clydeLeftHouse = false;
+            }
         }, pinky.getSpeed());
+
+
+
+        window.scatterInterval = setInterval(function() {
+            var today = new Date();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            if (window.scatterMode === true) {
+                console.log("chase mode interval :::::::  " + time);
+                window.scatterMode = false;
+                window.chaseMode = true;
+            }
+            else if (window.scatterMode === false) {
+                console.log("scatter mode interval :::::::  " + time);
+                window.scatterMode = true;
+                window.chaseMode = false;
+            }
+        }, window.scatterModeDuration);
     }
 
     function pacmanChangeDirection(matrix, pacmanPos, blinky, pinky, inky, clyde) {
@@ -409,13 +531,21 @@
             event = event || event;
             map[event.keyCode] = event.type === 'keydown';
             if (map[37] === true || map[38] === true || map[39] === true || map[40] === true) {
-                if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) === true) {
+                if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) && (window.panicMode === false)) {
                     clearInterval(window.pacmanInterval);
                     clearInterval(window.blinkyInterval);
                     clearInterval(window.inkyInterval);
                     clearInterval(window.pinkyInterval);
                     clearInterval(window.clydeInterval);
+                    clearInterval(window.scatterInterval);
+                    clearInterval(window.chaseInterval);
                     b.innerHTML = "<h1>Game Over</h1>";
+                }
+                else if (window.panicMode === true) {
+                    blinky.setIsEatenByPacman((blinky.getPos().x === pacmanPos.x && blinky.getPos().y === pacmanPos.y) || blinky.isEatenByPacman);
+                    pinky.setIsEatenByPacman((pinky.getPos().x === pacmanPos.x && pinky.getPos().y === pacmanPos.y) || pinky.isEatenByPacman);
+                    inky.setIsEatenByPacman((inky.getPos().x === pacmanPos.x && inky.getPos().y === pacmanPos.y) || inky.isEatenByPacman);
+                    clyde.setIsEatenByPacman((clyde.getPos().x === pacmanPos.x && clyde.getPos().y === pacmanPos.y) || clyde.isEatenByPacman);
                 }
                 if (map[38] === true) {
                     if (isValid(pacmanPos.x - 1, pacmanPos.y) && isValidClass(matrix[pacmanPos.x - 1][pacmanPos.y]))

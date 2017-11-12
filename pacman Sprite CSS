@@ -9,7 +9,7 @@
 .apple, .greenFruit, .flower, .key {
   background-image: url('pacman-sprite.png');
   background-repeat: no-repeat;
-  zoom: 0.2857;
+  zoom: 0.3572;
   -webkit-transform: rotate(90deg);
 }
 /*///////////////////////////////////////////////////////////////////////////////////////////////// GHOST BLINKY /*/
@@ -195,7 +195,7 @@
   height: 56px;
 }
 .ghostBlue2 {
-  background-position: -197px -772px; 
+  background-position: -196px -772px; 
   width: 56px;
   height: 56px;
 }
