@@ -1,11 +1,14 @@
-/* fonts */
-/* @import url(https://fonts.googleapis.com/css?family=Open+Sans: 400, 300); */
+@font-face {
+    font-family: 'pacmanFont';
+    src: url('joystix monospace.ttf');
+}
+
 html,
 body {
-  font-size: .625em;
+  font-family: pacmanFont;
   background: #070707;
   color: white;
-  font-size: 25pt;
+  font-size: 18pt;
 }
 
 .ijkl {
@@ -13,6 +16,15 @@ body {
   flex-wrap: wrap;
   height: 620px;
   width: 560px;
+}
+
+#livesLeft {
+  display: flex;
+}
+
+div#livesLeft .pacmanLeft315 {
+  zoom: 0.4;
+  margin-right: 4px;
 }
 
 .ze {
