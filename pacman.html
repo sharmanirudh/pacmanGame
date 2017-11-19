@@ -5,7 +5,9 @@
     <link rel="stylesheet" type="text/css" href="pacman.css">
 </head>
 <body>
-<div id="score">SCORE </div>
+<div id="currentScoreDisplay">
+    SCORE <span id="updateScore">0</span>
+</div>
 <div class="ijkl"></div>
 <div id="livesLeft">
     <div class="pacmanLeft315"></div>
@@ -22,23 +24,25 @@
             this.direction = {};
             this.position = {};
             this.classActive = "";
-            this.speed = 400;
+            this.speed = 300;
             this.isEatenByPacman = false;
         }
         move(matrix, matrixCopy, pacmanPos, targetPos, ghost1, ghost2, ghost3) {
             if (isGameOver(pacmanPos, this, ghost1, ghost2, ghost3) && (window.panicMode === false)) {
                 clearInterval(window.pacmanInterval);
-                clearInterval(window.blinkyInterval);
-                clearInterval(window.inkyInterval);
-                clearInterval(window.pinkyInterval);
-                clearInterval(window.clydeInterval);
+                clearTimeout(window.blinkyInterval);
+                clearTimeout(window.inkyInterval);
+                clearTimeout(window.pinkyInterval);
+                clearTimeout(window.clydeInterval);
                 clearInterval(window.scatterInterval);
                 clearInterval(window.chaseInterval);
-                b.innerHTML = "<h1>Game Over</h1>";
+                b.innerHTML = "<h1>Game Over</h1><br><h3>SCORE: " + window.currentScore + "</h3>";
             }
             else if (window.panicMode === true && this.isEatenByPacman === false)
-                this.isEatenByPacman = ((this.position.x === pacmanPos.x && this.position.y === pacmanPos.y) || this.isEatenByPacman);
-            console.log(this.isEatenByPacman);
+                this.setIsEatenByPacman((this.position.x === pacmanPos.x && this.position.y === pacmanPos.y) || this.isEatenByPacman);
+            if(window.panicMode === false)
+                this.setIsEatenByPacman(false);
+
 
             var i, adjPosArray = [], adjPos = {}, rowNum = [-1, 0, 0, 1], colNum = [0, -1, 1, 0];
             for (i = 0; i < 4; i++) {
@@ -160,6 +164,12 @@
         }
         setIsEatenByPacman(booleanAnswer) {
             this.isEatenByPacman = (booleanAnswer === true);
+            if (this.isEatenByPacman === true && window.panicMode === true)
+                this.speed = 100;
+            else if (this.isEatenByPacman === false && window.panicMode === true)
+                this.speed = 350;
+            else
+                this.speed = 300;
         }
         getIsEatenByPacman() {
             return this.isEatenByPacman;
@@ -180,6 +190,7 @@
 
     str = "";
     b = document.getElementsByTagName("body")[0];
+    updateScore = document.getElementById("updateScore");
     ROW_MAX = 31;
     COL_MAX = 28;
     pacmanSpeed = 160;
@@ -187,6 +198,7 @@
     pacmanMouthAngle = 360;
     angleDiff = 45;
     pacmanInterval = null;
+    currentScore = 0;
 
     blinky = new Ghost();
     blinky.setName("blinky");
@@ -223,6 +235,8 @@
     panicMode = false;// run from pacman
     panicColour = "White";
     panicModeGettingOver = false;
+    panicInterval = null;
+    panicModeGettingOverInterval = null;
     chaseMode = false;// chase pacman
     chaseModeDuration = 20000;
     chaseInterval = null;
@@ -303,6 +317,41 @@
                 ['B3', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B5', 'B3', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B5']
             ]);
         }
+        if (level === 3) {
+            return ([
+                ['B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'E7', 'E1', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4'],
+                ['ze', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'ze'],
+                ['b7', 'pp', 'b1', 'B8', 'B8', 'b7', 'pp', 'b1', 'B8', 'B8', 'B8', 'b7', 'pp', 'b2', 'b6', 'pp', 'b1', 'B8', 'B8', 'B8', 'b7', 'pp', 'b1', 'B8', 'B8', 'b7', 'pp', 'b1'],
+                ['B6', 'PP', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2', 'ze', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'ze', 'B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'PP', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b3', 'B4', 'B4', 'B4', 'b5', 'pp', 'b2', 'b6', 'pp', 'b3', 'B4', 'B4', 'B4', 'b5', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b1', 'b7', 'pp', 'b1', 'b7', 'pp', 'b2', 'b6', 'pp', 'b1', 'b7', 'pp', 'b1', 'b7', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'b3', 'B4', 'B4', 'b5', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'b3', 'b5', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'b3', 'B4', 'B4', 'b5', 'pp', 'B2'],
+                ['B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2'],
+                ['B6', 'pp', 'b1', 'B8', 'B8', 'b7', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'b1', 'b7', 'pp', 'b2', 'b6', 'pp', 'b2', 'b6', 'pp', 'b1', 'B8', 'B8', 'b7', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'pp', 'b3', 'b5', 'pp', 'b3', 'b5', 'pp', 'b3', 'b5', 'pp', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b3', 'b5', 'ze', 'H1', 'B8', 'L8', 'H8', 'H8', 'R8', 'B8', 'H7', 'ze', 'b3', 'b5', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'pp', 'pp', 'ze', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'ze', 'pp', 'pp', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b1', 'b7', 'ze', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'ze', 'b1', 'b7', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'b2', 'b6', 'ze', 'B2', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'B6', 'ze', 'b2', 'b6', 'pp', 'B2', 'ze', 'ze', 'B6', 'pp', 'B2'],
+                ['B6', 'pp', 'b3', 'B4', 'B4', 'b5', 'pp', 'b2', 'b6', 'ze', 'H3', 'B4', 'B4', 'B4', 'B4', 'B4', 'B4', 'H5', 'ze', 'b2', 'b6', 'pp', 'b3', 'B4', 'B4', 'b5', 'pp', 'B2'],
+                ['B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b6', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'ze', 'b2', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2'],
+                ['E3', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'b2', 'b3', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b5', 'b6', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'E5'],
+                ['C8', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'C9'],
+                ['B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2'],
+                ['B6', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'B2'],
+                ['B6', 'pp', 'b3', 'b4', 'b7', 'b1', 'b8', 'b7', 'b6', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'b2', 'b1', 'b8', 'b7', 'b1', 'b4', 'b5', 'pp', 'B2'],
+                ['B6', 'PP', 'pp', 'pp', 'b2', 'b2', 'ze', 'b6', 'b6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'b2', 'b2', 'ze', 'b6', 'b6', 'pp', 'pp', 'PP', 'B2'],
+                ['E3', 'b8', 'b7', 'pp', 'b2', 'b3', 'b4', 'b5', 'b6', 'pp', 'b1', 'b8', 'b8', 'b8', 'b8', 'b8', 'b8', 'b7', 'pp', 'b2', 'b3', 'b4', 'b5', 'b6', 'pp', 'b1', 'b8', 'E5'],
+                ['C8', 'b4', 'b5', 'pp', 'b2', 'b1', 'b8', 'b7', 'b6', 'pp', 'b2', 'b1', 'b8', 'b8', 'b8', 'b8', 'b7', 'b6', 'pp', 'b2', 'b1', 'b8', 'b7', 'b6', 'pp', 'b3', 'b4', 'C9'],
+                ['B6', 'pp', 'pp', 'pp', 'b2', 'b2', 'ze', 'b6', 'b6', 'pp', 'b2', 'b2', 'ze', 'ze', 'ze', 'ze', 'b6', 'b6', 'pp', 'b2', 'b2', 'ze', 'b6', 'b6', 'pp', 'pp', 'pp', 'B2'],
+                ['B6', 'pp', 'b1', 'b8', 'b5', 'b3', 'b4', 'b5', 'b6', 'pp', 'b2', 'b3', 'b4', 'b4', 'b4', 'b4', 'b5', 'b6', 'pp', 'b2', 'b3', 'b4', 'b5', 'b3', 'b8', 'b7', 'pp', 'B2'],
+                ['B6', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'b3', 'b4', 'b4', 'b4', 'b4', 'b4', 'b5', 'pp', 'B2'],
+                ['B6', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'pp', 'B2'],
+                ['B3', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B8', 'B5']
+            ]);
+        }
     }
 
     function isValid(row, col) {
@@ -320,13 +369,13 @@
     function movePacman(matrix, matrixCopy, pacmanPos, blinky, pinky, inky, clyde) {
         if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) && (window.panicMode === false)) {
             clearInterval(window.pacmanInterval);
-            clearInterval(window.blinkyInterval);
-            clearInterval(window.inkyInterval);
-            clearInterval(window.pinkyInterval);
-            clearInterval(window.clydeInterval);
+            clearTimeout(window.blinkyInterval);
+            clearTimeout(window.inkyInterval);
+            clearTimeout(window.pinkyInterval);
+            clearTimeout(window.clydeInterval);
             clearInterval(window.scatterInterval);
             clearInterval(window.chaseInterval);
-            b.innerHTML = "<h1>Game Over</h1>";
+            b.innerHTML = "<h1>Game Over</h1><br><h3>SCORE: " + window.currentScore + "</h3>";
         }
         else if (window.panicMode === true) {
             blinky.setIsEatenByPacman((blinky.getPos().x === pacmanPos.x && blinky.getPos().y === pacmanPos.y) || blinky.isEatenByPacman);
@@ -350,17 +399,26 @@
         }
         else if (pacmanPos.x + pacmanDirection.x >= 0 && pacmanPos.x + pacmanDirection.x < ROW_MAX && pacmanPos.y + pacmanDirection.y >= 0 && pacmanPos.y + pacmanDirection.y < COL_MAX && isValidClass(matrix[pacmanPos.x + pacmanDirection.x][pacmanPos.y + pacmanDirection.y])) {
             if (matrix[pacmanPos.x][pacmanPos.y] === "PP") {
+                window.currentScore += 100;
                 window.panicMode = true;
-
-                window.setTimeout(function() {
+                clearTimeout(window.panicInterval);
+                clearTimeout(window.panicModeGettingOverInterval);
+                blinky.setIsEatenByPacman(false);
+                pinky.setIsEatenByPacman(false);
+                inky.setIsEatenByPacman(false);
+                clyde.setIsEatenByPacman(false);
+                window.panicInterval = setTimeout(function() {
                     window.panicMode = false;
                     window.panicModeGettingOver = false;
                 }, 10000);
 
-                window.setTimeout(function() {
+                window.panicModeGettingOverInterval = setTimeout(function() {
                     window.panicModeGettingOver = true;
                 }, 7000);
             }
+            else if (matrix[pacmanPos.x][pacmanPos.y] === "pp")
+                window.currentScore += 10;
+            updateScore.innerText = window.currentScore;
             matrix[pacmanPos.x][pacmanPos.y] = 'ze';
             matrixCopy[pacmanPos.x][pacmanPos.y] = 'ze';
             drawLevelParts(matrixCopy[pacmanPos.x][pacmanPos.y], pacmanPos);
@@ -464,86 +522,13 @@
         }, pacmanSpeed);
 
 
-        window.blinkyInterval = setInterval(function() {
-            if (blinky.getIsEatenByPacman() === true && window.panicMode === true)
-                blinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 12}, inky, pinky, clyde);
-            else if (blinkyLeftHouse === true && window.chaseMode === true)
-                blinky.move(matrix, matrixCopy, pacmanPos, pacmanPos, inky, pinky, clyde);
-            else if (blinkyLeftHouse === false)
-                blinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, pinky, clyde);
-            else if (window.scatterMode === true)
-                blinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: 28}, inky, pinky, clyde);
+        window.blinkyInterval = setTimeout(function(){ blinkyGhost(matrix, matrixCopy, pacmanPos); }, blinky.getSpeed());
 
-            var blinkyPos = blinky.getPos();
-            if (blinkyPos.x === 11 && blinkyPos.y === 14)
-                window.blinkyLeftHouse = true;
-            else if (blinkyPos.x >= 12 && blinkyPos.x <= 16 && blinkyPos.y >= 10 && blinkyPos.y <= 17) {
-                blinky.setIsEatenByPacman(false);
-                window.blinkyLeftHouse = false;
-            }
-        }, blinky.getSpeed());
+        window.inkyInterval = setTimeout(function(){ inkyGhost(matrix, matrixCopy, pacmanPos); }, inky.getSpeed());
 
-        window.inkyInterval = setInterval(function() {
-            if (inky.getIsEatenByPacman() === true && window.panicMode === true)
-                inky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 13}, blinky, pinky, clyde);
-            else if (inkyLeftHouse === true && window.chaseMode === true)
-                inky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x + 4*pacmanDirection.x, y: pacmanPos.y + 4*pacmanDirection.y}, blinky, pinky, clyde);
-            else if (inkyLeftHouse === false)
-                inky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, blinky, pinky, clyde);
-            else if (window.scatterMode === true)
-                inky.move(matrix, matrixCopy, pacmanPos, {x: 31, y: 28}, blinky, pinky, clyde);
+        window.pinkyInterval = setTimeout(function(){ pinkyGhost(matrix, matrixCopy, pacmanPos); }, pinky.getSpeed());
 
-            var inkyPos = inky.getPos();
-            if (inkyPos.x === 11 && inkyPos.y === 14)
-                window.inkyLeftHouse = true;
-            else if (inkyPos.x >= 12 && inkyPos.x <= 16 && inkyPos.y >= 10 && inkyPos.y <= 17) {
-                inky.setIsEatenByPacman(false);
-                window.inkyLeftHouse = false;
-            }
-        }, inky.getSpeed());
-
-        window.pinkyInterval = setInterval(function() {
-            if (pinky.getIsEatenByPacman() === true && window.panicMode === true)
-                pinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 14}, inky, blinky, clyde);
-            else if (pinkyLeftHouse === true && window.chaseMode === true)
-                pinky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, clyde);
-            else if (pinkyLeftHouse === false)
-                pinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, blinky, clyde);
-            else if (window.scatterMode === true)
-                pinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: -1}, inky, blinky, clyde);
-
-            var pinkyPos = pinky.getPos();
-            if (pinkyPos.x === 11 && pinkyPos.y === 14)
-                window.pinkyLeftHouse = true;
-            else if (pinkyPos.x >= 12 && pinkyPos.x <= 16 && pinkyPos.y >= 10 && pinkyPos.y <= 17) {
-                pinky.setIsEatenByPacman(false);
-                window.pinkyLeftHouse = false;
-            }
-        }, pinky.getSpeed());
-
-        window.clydeInterval = setInterval(function() {
-            if (clyde.getIsEatenByPacman() === true && window.panicMode === true)
-                clyde.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 15}, inky, blinky, pinky);
-            else if (clydeLeftHouse === true && window.chaseMode === true) {
-                if((clyde.getPos().x > pacmanPos.x + 4 || clyde.getPos().x < pacmanPos.x - 4) && (clyde.getPos().y > pacmanPos.y + 4 || clyde.getPos().y < pacmanPos.y - 4))
-                    clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, pinky);
-                else
-                    clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 12*pacmanDirection.x, y: pacmanPos.y - 12*pacmanDirection.y}, inky, blinky, pinky);
-            }
-            else if (clydeLeftHouse === false)
-                clyde.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 13}, inky, blinky, pinky);
-            else if (window.scatterMode === true)
-                clyde.move(matrix, matrixCopy, pacmanPos, {x: 31, y: -1}, inky, blinky, pinky);
-
-            var clydePos = clyde.getPos();
-            if (clydePos.x === 11 && clydePos.y === 13)
-                window.clydeLeftHouse = true;
-            else if (clydePos.x >= 12 && clydePos.x <= 16 && clydePos.y >= 10 && clydePos.y <= 17) {
-                clyde.setIsEatenByPacman(false);
-                window.clydeLeftHouse = false;
-            }
-        }, pinky.getSpeed());
-
+        window.clydeInterval = setTimeout(function(){ clydeGhost(matrix, matrixCopy, pacmanPos); }, pinky.getSpeed());
 
 
         window.scatterInterval = setInterval(function() {
@@ -562,6 +547,94 @@
         }, window.scatterModeDuration);
     }
 
+    function blinkyGhost(matrix, matrixCopy, pacmanPos) {
+//        clearInterval(window.blinkyInterval);
+        if (blinky.getIsEatenByPacman() === true && window.panicMode === true)
+            blinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 12}, inky, pinky, clyde);
+        else if (blinkyLeftHouse === true && window.chaseMode === true)
+            blinky.move(matrix, matrixCopy, pacmanPos, pacmanPos, inky, pinky, clyde);
+        else if (blinkyLeftHouse === false)
+            blinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, pinky, clyde);
+        else if (window.scatterMode === true)
+            blinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: 28}, inky, pinky, clyde);
+
+        var blinkyPos = blinky.getPos();
+        if (blinkyPos.x === 11 && blinkyPos.y === 14)
+            window.blinkyLeftHouse = true;
+        else if (blinkyPos.x >= 12 && blinkyPos.x <= 16 && blinkyPos.y >= 10 && blinkyPos.y <= 17) {
+            blinky.setIsEatenByPacman(false);
+            window.blinkyLeftHouse = false;
+        }
+        window.blinkyInterval = setTimeout(function(){ blinkyGhost(matrix, matrixCopy, pacmanPos); }, blinky.getSpeed());
+    }
+
+    function pinkyGhost(matrix, matrixCopy, pacmanPos) {
+//        clearInterval(window.pinkyInterval);
+        if (pinky.getIsEatenByPacman() === true && window.panicMode === true)
+            pinky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 14}, inky, blinky, clyde);
+        else if (pinkyLeftHouse === true && window.chaseMode === true)
+            pinky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, clyde);
+        else if (pinkyLeftHouse === false)
+            pinky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, inky, blinky, clyde);
+        else if (window.scatterMode === true)
+            pinky.move(matrix, matrixCopy, pacmanPos, {x: -1, y: -1}, inky, blinky, clyde);
+
+        var pinkyPos = pinky.getPos();
+        if (pinkyPos.x === 11 && pinkyPos.y === 14)
+            window.pinkyLeftHouse = true;
+        else if (pinkyPos.x >= 12 && pinkyPos.x <= 16 && pinkyPos.y >= 10 && pinkyPos.y <= 17) {
+            pinky.setIsEatenByPacman(false);
+            window.pinkyLeftHouse = false;
+        }
+        window.pinkyInterval = setTimeout(function(){ pinkyGhost(matrix, matrixCopy, pacmanPos); }, pinky.getSpeed());
+    }
+
+    function inkyGhost(matrix, matrixCopy, pacmanPos) {
+        clearInterval(window.inkyInterval);
+        if (inky.getIsEatenByPacman() === true && window.panicMode === true)
+            inky.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 13}, blinky, pinky, clyde);
+        else if (inkyLeftHouse === true && window.chaseMode === true)
+            inky.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x + 4*pacmanDirection.x, y: pacmanPos.y + 4*pacmanDirection.y}, blinky, pinky, clyde);
+        else if (inkyLeftHouse === false)
+            inky.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 14}, blinky, pinky, clyde);
+        else if (window.scatterMode === true)
+            inky.move(matrix, matrixCopy, pacmanPos, {x: 31, y: 28}, blinky, pinky, clyde);
+
+        var inkyPos = inky.getPos();
+        if (inkyPos.x === 11 && inkyPos.y === 14)
+            window.inkyLeftHouse = true;
+        else if (inkyPos.x >= 12 && inkyPos.x <= 16 && inkyPos.y >= 10 && inkyPos.y <= 17) {
+            inky.setIsEatenByPacman(false);
+            window.inkyLeftHouse = false;
+        }
+        window.inkyInterval = setTimeout(function(){ inkyGhost(matrix, matrixCopy, pacmanPos); }, inky.getSpeed());
+    }
+
+    function clydeGhost(matrix, matrixCopy, pacmanPos) {
+        clearInterval(window.clydeInterval);
+        if (clyde.getIsEatenByPacman() === true && window.panicMode === true)
+            clyde.move(matrix, matrixCopy, pacmanPos, {x: 15, y: 15}, inky, blinky, pinky);
+        else if (clydeLeftHouse === true && window.chaseMode === true) {
+            if((clyde.getPos().x > pacmanPos.x + 4 || clyde.getPos().x < pacmanPos.x - 4) && (clyde.getPos().y > pacmanPos.y + 4 || clyde.getPos().y < pacmanPos.y - 4))
+                clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 4*pacmanDirection.x, y: pacmanPos.y - 4*pacmanDirection.y}, inky, blinky, pinky);
+            else
+                clyde.move(matrix, matrixCopy, pacmanPos, {x: pacmanPos.x - 12*pacmanDirection.x, y: pacmanPos.y - 12*pacmanDirection.y}, inky, blinky, pinky);
+        }
+        else if (clydeLeftHouse === false)
+            clyde.move(matrix, matrixCopy, pacmanPos, {x: 11, y: 13}, inky, blinky, pinky);
+        else if (window.scatterMode === true)
+            clyde.move(matrix, matrixCopy, pacmanPos, {x: 31, y: -1}, inky, blinky, pinky);
+
+        var clydePos = clyde.getPos();
+        if (clydePos.x === 11 && clydePos.y === 13)
+            window.clydeLeftHouse = true;
+        else if (clydePos.x >= 12 && clydePos.x <= 16 && clydePos.y >= 10 && clydePos.y <= 17) {
+            clyde.setIsEatenByPacman(false);
+            window.clydeLeftHouse = false;
+        }
+        window.clydeInterval = setTimeout(function(){ clydeGhost(matrix, matrixCopy, pacmanPos); }, clyde.getSpeed());
+    }
+
     function pacmanChangeDirection(matrix, pacmanPos, blinky, pinky, inky, clyde) {
         var map = {};
         onkeydown = onkeyup = function(event) {
@@ -570,13 +643,13 @@
             if (map[37] === true || map[38] === true || map[39] === true || map[40] === true) {
                 if (isGameOver(pacmanPos, blinky, pinky, inky, clyde) && (window.panicMode === false)) {
                     clearInterval(window.pacmanInterval);
-                    clearInterval(window.blinkyInterval);
-                    clearInterval(window.inkyInterval);
-                    clearInterval(window.pinkyInterval);
-                    clearInterval(window.clydeInterval);
+                    clearTimeout(window.blinkyInterval);
+                    clearTimeout(window.inkyInterval);
+                    clearTimeout(window.pinkyInterval);
+                    clearTimeout(window.clydeInterval);
                     clearInterval(window.scatterInterval);
                     clearInterval(window.chaseInterval);
-                    b.innerHTML = "<h1>Game Over</h1>";
+                    b.innerHTML = "<h1>Game Over</h1><br><h3>SCORE: " + window.currentScore + "</h3>";
                 }
                 else if (window.panicMode === true) {
                     blinky.setIsEatenByPacman((blinky.getPos().x === pacmanPos.x && blinky.getPos().y === pacmanPos.y) || blinky.isEatenByPacman);
